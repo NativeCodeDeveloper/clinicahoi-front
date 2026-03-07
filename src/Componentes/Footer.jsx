@@ -1,30 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Instagram, MapPin, MessageCircle, Phone } from "lucide-react";
-
-const footerLinks = [
-  { label: "Inicio", href: "/#inicio" },
-  { label: "Servicios", href: "/#servicios" },
-  { label: "Casos clinicos", href: "/#casos-clinicos" },
-  { label: "Agenda", href: "/reserva-hora" },
-  { label: "Contacto", href: "/contacto" },
-];
+import { CalendarCheck2, Clock3, Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
 
 const socialLinks = [
   {
-    label: "Instagram",
-    href: "https://www.instagram.com/ortegaschmuck.cl",
+    label: "Salud hoi",
+    href: "https://www.facebook.com/",
+    icon: Facebook,
+  },
+  {
+    label: "Salud.hoi",
+    href: "https://www.instagram.com/salud.hoi",
     icon: Instagram,
-  },
-  {
-    label: "WhatsApp",
-    href: "https://wa.me/56994836980",
-    icon: MessageCircle,
-  },
-  {
-    label: "Ubicacion",
-    href: "https://maps.google.com/?q=Providencia,+Santiago,+Chile",
-    icon: MapPin,
   },
 ];
 
@@ -32,78 +19,110 @@ export default function FooterPremiumMedico() {
   return (
     <footer
       id="footer"
-      className="relative overflow-hidden border-t border-white/10 bg-black text-white"
+      className="relative mt-8 overflow-hidden bg-[linear-gradient(180deg,#edf4ff_0%,#d8e6fb_42%,#b9d1f2_100%)] text-slate-900"
     >
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(22,24,29,0.55)_0%,rgba(7,8,10,0.35)_38%,rgba(0,0,0,0.95)_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.55),transparent_40%)]" />
+      <div className="pointer-events-none absolute -left-14 top-8 h-56 w-56 rounded-full bg-white/35 blur-3xl" />
+      <div className="pointer-events-none absolute -right-12 bottom-6 h-60 w-60 rounded-full bg-[#5a86cf]/25 blur-3xl" />
 
-      <div className="relative mx-auto w-full max-w-7xl px-5 md:px-8 lg:px-10">
-        <div className="grid gap-8 py-12 lg:grid-cols-[1.25fr_0.75fr] lg:py-16">
-          <div className="rounded-[1.8rem] border border-white/10 bg-white/[0.02] p-6 sm:p-7">
-            <div className="flex items-center gap-3">
-              <div className="relative h-16 w-15 p-1.5">
-                <Image
-                  src="/logodifort.png"
-                  alt="Ortega & Schmuck"
-                  fill
-                  sizes="56px"
-                  className="object-contain"
-                />
-              </div>
-              <div>
-                <div className="min-w-0">
-                  <p className="truncate text-ml font-medium uppercase tracking-[0.28em] text-white sm:text-m">
-                    Ortega & Schmuck
-                  </p>
-                  <p className="truncate text-[8px] uppercase tracking-[0.2em] text-white/65 sm:text-[9px]">
-                    Odontología y Medicina Estética.
-                  </p>
-                </div>
-              </div>
-            </div>
+      <div className="relative mx-auto w-full max-w-7xl px-4 pb-8 pt-12 sm:px-6 lg:px-8 lg:pb-10 lg:pt-14">
+        <div className="mb-8 flex items-center justify-between gap-4 pb-3">
+          <div className="relative h-14 w-44 sm:h-16 sm:w-52">
+            <Image src="/logofullcolor.png" alt="Salud HOI" fill sizes="208px" className="object-contain object-left" />
+          </div>
 
-            <p className="mt-5 max-w-2xl text-sm leading-7 tracking-[0.02em] text-white/72">
-              Clinica especializada en armonizacion dental y facial, con protocolos
-              personalizados para resultados naturales, seguros y medibles.
-            </p>
+          <Link
+            href="/reserva-hora"
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d6e2fa] bg-[#f6f9ff] px-4 py-2.5 text-sm font-semibold text-[#3f7ee6] shadow-[0_8px_20px_-16px_rgba(20,40,90,0.5)] transition hover:bg-[#ebf2ff]"
+          >
+            <CalendarCheck2 className="h-4 w-4" />
+            Reserva Aqui
+          </Link>
+        </div>
 
-            <div className="mt-6 flex flex-wrap items-center gap-3">
+        <div className="grid grid-cols-1 items-stretch gap-5 md:grid-cols-3">
+          <section className="h-full rounded-3xl border border-[#d3dff4] bg-blue-400 p-5 shadow-[0_18px_36px_-30px_rgba(28,66,132,0.65)]">
+            <h3 className="text-xl font-bold tracking-tight text-slate-800">Contactos</h3>
+
+            <div className="mt-4 space-y-3">
               <a
-                href="tel:+56994836980"
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.04] px-4 py-2 text-xs tracking-[0.1em] text-white/85 transition hover:bg-white/[0.1] hover:text-white"
+                href="tel:+56972228872"
+                className="flex items-center gap-3 rounded-2xl border border-[#dce6f8] bg-white px-3 py-3 transition hover:bg-[#f7faff]"
               >
-                <Phone className="h-4 w-4" />
-                +56 9 9483 6980
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf4ff] text-[#3f7ee6]">
+                  <Phone className="h-5 w-5" />
+                </span>
+                <span className="text-base font-semibold text-slate-800">+56 9 72228872</span>
               </a>
+
               <a
-                href="https://wa.me/56994836980"
+                href="mailto:admsaludhoi@gmail.com"
+                className="flex items-center gap-3 rounded-2xl border border-[#dce6f8] bg-white px-3 py-3 transition hover:bg-[#f7faff]"
+              >
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf4ff] text-[#3f7ee6]">
+                  <Mail className="h-5 w-5" />
+                </span>
+                <span className="truncate text-base font-semibold text-slate-800">admsaludhoi@gmail.com</span>
+              </a>
+
+              <a
+                href="https://maps.google.com/?q=Bernardo+OHiggins+433,+Puerto+Aysen,+Aysen"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.04] px-4 py-2 text-xs tracking-[0.1em] text-white/85 transition hover:bg-white/[0.1] hover:text-white"
+                className="flex items-center gap-3 rounded-2xl border border-[#dce6f8] bg-white px-3 py-3 transition hover:bg-[#f7faff]"
               >
-                <MessageCircle className="h-4 w-4" />
-                WhatsApp directo
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf4ff] text-[#3f7ee6]">
+                  <MapPin className="h-5 w-5" />
+                </span>
+                <span className="truncate text-base font-semibold text-slate-800">
+                  Bernardo O&apos;Higgins 433, Puerto Aysen
+                </span>
               </a>
             </div>
+          </section>
 
-            <div className="mt-8 border-t border-white/10 pt-6">
-              <p className="text-[11px] uppercase tracking-[0.22em] text-white/55">Navegacion</p>
-              <nav aria-label="Links del pie de pagina" className="mt-4">
-                <ul className="flex flex-wrap gap-3">
-                  {footerLinks.map((item) => (
-                    <li key={item.label}>
-                      <Link
-                        href={item.href}
-                        className="inline-flex rounded-full border border-white/15 px-4 py-2 text-[11px] uppercase tracking-[0.15em] text-white/70 transition hover:border-white/30 hover:text-white"
-                      >
-                        {item.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
+          <section className="h-full rounded-3xl border border-[#d3dff4] bg-blue-400 p-2 shadow-[0_18px_36px_-30px_rgba(28,66,132,0.65)]">
+            <div className="relative overflow-hidden rounded-2xl border border-[#dce6f8] bg-white h-[360px] md:h-full md:min-h-[420px]">
+              <iframe
+                title="Mapa ubicacion Salud HOI"
+                src="https://www.google.com/maps?q=Bernardo%20OHiggins%20433%20Puerto%20Aysen%20Aysen&output=embed"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="h-full w-full"
+              />
+
+              <div className="absolute inset-x-2 top-2 z-10 flex items-center justify-between">
+                <span className="rounded-full border border-white/80 bg-white/90 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-slate-700">
+                  Ubicacion
+                </span>
+                <a
+                  href="https://maps.google.com/?q=Bernardo+OHiggins+433,+Puerto+Aysen,+Aysen"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full border border-[#d6e2fa] bg-white/95 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[#3f7ee6] hover:bg-white"
+                >
+                  Abrir mapa
+                </a>
+              </div>
+            </div>
+          </section>
+
+          <section className="h-full rounded-3xl border border-[#d3dff4] bg-blue-400 p-5 shadow-[0_18px_36px_-30px_rgba(28,66,132,0.65)]">
+            <h3 className="flex items-center gap-2 text-xl font-bold tracking-tight text-slate-800">
+              <Clock3 className="h-5 w-5 text-[#3f7ee6]" />
+              Horarios
+            </h3>
+
+            <div className="mt-4 rounded-2xl border border-[#dce6f8] bg-white px-4 py-4 text-slate-800">
+              <p className="text-lg font-bold">Lunes a Viernes</p>
+              <p className="text-lg font-semibold">15:00 - 20:00</p>
+              <p className="mt-3 text-lg font-bold">Sabados</p>
+              <p className="text-lg font-semibold">9:00 a 17:00</p>
+              <p className="mt-3 text-lg font-bold">Domingos</p>
+              <p className="text-lg font-semibold">Cerrados</p>
             </div>
 
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-4 flex gap-2">
               {socialLinks.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -113,57 +132,28 @@ export default function FooterPremiumMedico() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={item.label}
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/20 bg-white/[0.04] text-white/80 transition hover:scale-105 hover:border-white/35 hover:bg-white/[0.1] hover:text-white"
+                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-[#dce6f8] bg-white px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-[#f7faff] hover:text-[#3f7ee6]"
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon className="h-4 w-4" />
+                    {item.label}
                   </a>
                 );
               })}
             </div>
-          </div>
-
-          <aside className="rounded-[1.8rem] border border-white/10 bg-white/[0.02] p-4 sm:p-5">
-            <p className="text-[11px] uppercase tracking-[0.22em] text-white/58">Ubicacion</p>
-            <h4 className="mt-3 text-xl font-light tracking-[0.02em]">
-              Providencia, Santiago de Chile
-            </h4>
-            <p className="mt-3 text-sm leading-7 text-white/70">
-              Atencion con agenda previa. Estamos cerca de los principales accesos de Providencia.
-            </p>
-
-            <a
-              href="https://maps.google.com/?q=Providencia,+Santiago,+Chile"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/20 bg-white px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.16em] text-black transition hover:bg-white/90"
-            >
-              <MapPin className="h-4 w-4" />
-              Abrir en Google Maps
-            </a>
-
-            <div className="mt-5 overflow-hidden rounded-2xl border border-white/10">
-              <iframe
-                title="Mapa ubicacion Ortega & Schmuck"
-                src="https://www.google.com/maps?q=Providencia%2C%20Santiago%2C%20Chile&output=embed"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="h-[240px] w-full"
-              />
-            </div>
-          </aside>
+          </section>
         </div>
 
-        <div className="flex flex-col gap-3 border-t border-white/10 py-6 text-[11px] text-white/55 md:flex-row md:items-center md:justify-between">
-          <p>© {new Date().getFullYear()} Ortega & Schmuck. Todos los derechos reservados.</p>
+        <div className="mt-6 mb-4 flex flex-col gap-1 text-sm font-medium text-slate-700 sm:flex-row sm:items-center sm:justify-between">
+          <p>© 2026 - Salud HOI, Puerto Aysen. Todos los derechos reservados.</p>
           <p>
             Desarrollado por{" "}
             <a
               href="https://www.nativecode.cl/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white/72 transition hover:text-white"
+              className="font-semibold text-[#2e66c8] underline-offset-4 transition hover:underline"
             >
-              NativeCode.cl
+              nativecode.cl
             </a>
           </p>
         </div>

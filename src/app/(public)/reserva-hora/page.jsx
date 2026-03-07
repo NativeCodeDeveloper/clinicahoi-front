@@ -1,6 +1,7 @@
 'use client'
 import {Suspense} from "react";
 import {useSearchParams} from "next/navigation";
+import Link from "next/link";
 
 function ReservaHoraContent() {
     const searchParams = useSearchParams();
@@ -46,7 +47,7 @@ function ReservaHoraContent() {
               <p className="mt-2 text-slate-700">
                 Su hora con{" "}
                 <span className="font-semibold text-slate-900">
-                  el equipo clínico de Ortega & Schmuck
+                  el equipo de Salud HOI
                 </span>{" "}
                 ha sido reservada con éxito.
               </p>
@@ -112,7 +113,7 @@ function ReservaHoraContent() {
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-slate-900">Ubicación</p>
-                    <p className="text-sm text-slate-600">Clínica Ortega & Schmuck, Providencia, Santiago de Chile</p>
+                    <p className="text-sm text-slate-600">Salud HOI, Bernardo O&apos;Higgins 433, Puerto Aysen</p>
                   </div>
                 </div>
               </div>
@@ -128,19 +129,19 @@ function ReservaHoraContent() {
             </div>
 
             <div className="mt-7 flex flex-col items-center gap-3">
-              <a
-                href="/AgendaProceso"
+              <Link
+                href="/agendaProfesionales"
                 className="inline-flex w-full max-w-xs items-center justify-center rounded-xl bg-gray-900 px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-300"
               >
                 Agendar otra cita
-              </a>
+              </Link>
 
-              <a
+              <Link
                 href="/"
                 className="text-sm font-semibold text-slate-700 hover:text-slate-900"
               >
                 Volver al inicio
-              </a>
+              </Link>
             </div>
 
           </div>

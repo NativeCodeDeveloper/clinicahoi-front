@@ -1,76 +1,88 @@
-import { Braces, HeartPulse, ScanLine, Stethoscope } from "lucide-react";
 import RevealOnScroll from "@/Componentes/RevealOnScroll";
+import InformacionesHoyCarousel from "@/Componentes/InformacionesHoyCarousel";
 
-const pillars = [
+const fallbackCards = [
   {
-    title: "Tecnologia avanzada",
-    text: "Equipamiento de ultima generacion para diagnosticos claros y decisiones de alta precision.",
-    icon: ScanLine,
+    id: "fallback-1",
+    title: "PAS: Primeros auxilios psicologicos. Que hacer y como ayudar?",
+    image: "/logo42.png",
   },
   {
-    title: "Profesionales especializados",
-    text: "Equipo clinico con formacion continua para ofrecer protocolos seguros y actualizados.",
-    icon: Stethoscope,
+    id: "fallback-2",
+    title: "Dolor lumbar: ejercicios practicos para aliviar el dolor",
+    image: "/logo41.png",
   },
   {
-    title: "Enfoque estetico premium",
-    text: "Buscamos armonia y naturalidad con una planificacion individual en cada paciente.",
-    icon: Braces,
-  },
-  {
-    title: "Atencion personalizada",
-    text: "Acompanamiento cercano antes, durante y despues del tratamiento.",
-    icon: HeartPulse,
+    id: "fallback-3",
+    title: "Hablemos sobre: mitos sobre la depresion",
+    image: "/logo42.png",
   },
 ];
 
-export default function Seccion1() {
+function cfToSrc(imageId, hash, variant = "full") {
+  if (!imageId) return "";
+  if (typeof imageId === "string" && imageId.startsWith("http")) return imageId;
+  return `https://imagedelivery.net/${hash}/${imageId}/${variant}`;
+}
+
+async function getInformacionesCards() {
+  const API = process.env.NEXT_PUBLIC_API_URL;
+  const CLOUDFLARE_HASH = process.env.NEXT_PUBLIC_CLOUDFLARE_HASH || "aCBUhLfqUcxA2yhIBn1fNQ";
+
+  if (!API) return fallbackCards;
+
+  try {
+    const res = await fetch(`${API}/publicaciones/seleccionarPublicaciones`, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+      next: { revalidate: 60 },
+    });
+
+    if (!res.ok) return fallbackCards;
+
+    const publicaciones = await res.json();
+    if (!Array.isArray(publicaciones) || publicaciones.length === 0) return fallbackCards;
+
+    const mapped = publicaciones
+      .map((item) => ({
+        id: `publicacion-${item.id_publicaciones}`,
+        title: item.descripcionPublicaciones?.trim() || "Informacion HOI",
+        image:
+          cfToSrc(item.imagenPublicaciones_primera, CLOUDFLARE_HASH, "full") ||
+          cfToSrc(item.imagenPublicaciones_primera, CLOUDFLARE_HASH, "card"),
+      }))
+      .filter((item) => item.image);
+
+    return mapped.length ? mapped : fallbackCards;
+  } catch (err) {
+    console.error("Error al cargar publicaciones para Informaciones HOI:", err);
+    return fallbackCards;
+  }
+}
+
+export default async function Seccion1() {
+  const cards = await getInformacionesCards();
+
   return (
     <section
-      id="porque-elegirnos"
-      className="scroll-mt-24 bg-black py-20 text-white sm:py-24"
+      id="informaciones-hoy"
+      className="scroll-mt-24 bg-[linear-gradient(180deg,rgba(233,240,253,0.86)_0%,rgba(202,219,244,0.82)_100%)] py-20 text-slate-900 sm:py-24"
     >
-      <div className="mx-auto w-full max-w-7xl px-5 md:px-8 lg:px-10">
+      <div className="mx-auto w-full max-w-7xl px-7 md:px-8 lg:px-10">
         <RevealOnScroll>
-          <p className="text-xs uppercase tracking-[0.24em] text-white/65">Por que elegirnos</p>
-          <h2 className="mt-4 max-w-3xl text-balance text-3xl font-light leading-tight tracking-[0.02em] sm:text-4xl lg:text-5xl">
-            Una clinica premium pensada para resultados naturales y medibles.
-          </h2>
+          <div className="text-center">
+            <p className="text-[2.05rem] font-black uppercase tracking-tight text-slate-900 sm:text-[2.5rem]">
+              Informaciones <span className="text-[#4580e1]">HOI</span>
+            </p>
+            <div className="mx-auto mt-5 flex max-w-4xl items-center gap-3">
+              <span className="h-3 w-3 rounded-sm bg-[#f4f6fb]" />
+              <span className="h-[2px] flex-1 bg-[#f4f6fb]" />
+              <span className="h-3 w-3 rounded-sm bg-[#f4f6fb]" />
+            </div>
+          </div>
         </RevealOnScroll>
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {pillars.map((item, index) => {
-            const Icon = item.icon;
-
-            return (
-              <RevealOnScroll
-                key={item.title}
-                className="h-full"
-                delayClass={
-                  index === 0
-                    ? "delay-75"
-                    : index === 1
-                    ? "delay-100"
-                    : index === 2
-                    ? "delay-150"
-                    : "delay-200"
-                }
-              >
-                <article className="h-full rounded-3xl border border-white/10 bg-[linear-gradient(180deg,rgba(37,37,38,0.95)_0%,rgba(14,14,15,0.98)_100%)] p-6 transition duration-300 ease-out hover:-translate-y-1 hover:border-white/20">
-                  <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/15 bg-white/5">
-                    <Icon className="h-6 w-6 text-white" />
-                  </div>
-                  <h3 className="mt-5 text-xl font-light tracking-[0.01em] text-white">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-7 tracking-[0.02em] text-white/75">
-                    {item.text}
-                  </p>
-                </article>
-              </RevealOnScroll>
-            );
-          })}
-        </div>
+        <InformacionesHoyCarousel cards={cards} />
       </div>
     </section>
   );

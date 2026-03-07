@@ -1,42 +1,57 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Brain,
+  ChevronLeft,
+  ChevronRight,
+  Dumbbell,
+  HandHeart,
+  Salad,
+  StretchHorizontal,
+} from "lucide-react";
 
 const defaultHeroSlides = [
   {
     id: "hero-1",
-    image: "/fondo2.png",
-    alt: "Clinica premium Ortega & Schmuck",
-    badge: "Experiencia premium",
-    title: "Diseño clínico de alta precisión.",
-    text: "Protocolos personalizados para resultados naturales en odontología integral.",
+    title: "¿Quieres mejorar tu estado de salud?",
+    text: "Obten un 10% de descuento en tu evaluacion nutricional, reserva ahora.",
+    cta: "Reserva Aquí",
+    tone: "from-[#f7fbff] via-[#e7effe] to-[#cfdff8]",
+    image: "/logo41.png",
   },
   {
     id: "hero-2",
-    image: "/fondo3.png",
-    alt: "Paciente en evaluacion estetica",
-    badge: "Tecnologia avanzada",
-    title: "Resultados funcionales y estéticos.",
-    text: "Análisis integral, plan por etapas y acompañamiento continuo en cada tratamiento.",
+    title: "Atención integral para tu bienestar",
+    text: "Kinesiologia, nutricion, psicologia, masoterapia y entrenamiento en un solo lugar.",
+    cta: "Ver Profesionales",
+    tone: "from-[#f6f9ff] via-[#e6eeff] to-[#c9daf6]",
+    image: "/logo41.png",
   },
   {
     id: "hero-3",
-    image: "/fondo1.png",
-    alt: "Equipo clinico especializado",
-    badge: "Atencion personalizada",
-    title: "Tu salud oral en un solo lugar.",
-    text: "Integramos criterio clínico y estética dental para una experiencia moderna y segura.",
+    title: "Agenda por profesional en pocos pasos",
+    text: "Elige especialista, horario y confirma tu hora online desde cualquier dispositivo.",
+    cta: "Agendar Ahora",
+    tone: "from-[#f8fbff] via-[#e9f1ff] to-[#d1e1f9]",
+    image: "/logo41.png",
   },
 ];
 
+const serviceIcons = [
+  { label: "Kinesiología", icon: StretchHorizontal },
+  { label: "Entrenamientos", icon: Dumbbell },
+  { label: "Nutrición", icon: Salad },
+  { label: "Masoterapia", icon: HandHeart },
+  { label: "Psicología", icon: Brain },
+];
+
+const passthroughLoader = ({ src }) => src;
+
 export default function Portada({ slides = defaultHeroSlides }) {
-  const safeSlides = useMemo(
-    () => (slides.length > 0 ? slides : defaultHeroSlides),
-    [slides]
-  );
+  const safeSlides = slides.length > 0 ? slides : defaultHeroSlides;
   const [activeIndex, setActiveIndex] = useState(0);
   const touchStartX = useRef(null);
 
@@ -45,7 +60,7 @@ export default function Portada({ slides = defaultHeroSlides }) {
 
     const intervalId = setInterval(() => {
       setActiveIndex((current) => (current + 1) % safeSlides.length);
-    }, 5200);
+    }, 5500);
 
     return () => clearInterval(intervalId);
   }, [safeSlides.length]);
@@ -69,11 +84,8 @@ export default function Portada({ slides = defaultHeroSlides }) {
     const distance = endX - touchStartX.current;
 
     if (Math.abs(distance) > 45) {
-      if (distance > 0) {
-        goPrev();
-      } else {
-        goNext();
-      }
+      if (distance > 0) goPrev();
+      else goNext();
     }
 
     touchStartX.current = null;
@@ -82,113 +94,111 @@ export default function Portada({ slides = defaultHeroSlides }) {
   return (
     <section
       id="inicio"
-      className="relative min-h-screen scroll-mt-24 overflow-hidden bg-black text-white"
+      className="scroll-mt-24 bg-[linear-gradient(180deg,rgba(227,236,251,0.86)_0%,rgba(190,208,236,0.8)_100%)] pt-6 pb-14 text-slate-900 sm:pt-8 sm:pb-16"
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_12%,rgba(133,139,149,0.2),transparent_40%),radial-gradient(circle_at_90%_0%,rgba(255,255,255,0.08),transparent_35%)]" />
-
-      <div className="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-none items-start px-2 pt-3 pb-4 sm:pt-5 sm:pb-8 md:min-h-[calc(100vh-6rem)] md:px-8 md:pt-7 lg:px-10">
-        <div className="relative w-full overflow-hidden rounded-[2rem] border border-white/15 bg-zinc-900/40 shadow-[0_34px_90px_-56px_rgba(0,0,0,0.95)]">
+      <div className="mx-auto w-full max-w-8xl px-3 sm:px-5 md:px-8 lg:px-10">
+        <div
+          className="relative overflow-hidden rounded-[1.5rem] border border-white/70 bg-white shadow-[0_30px_70px_-45px_rgba(30,70,145,0.78)] sm:rounded-[1.8rem]"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <div
-            className="relative min-h-[76vh] sm:min-h-[82vh]"
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
+            className="flex transition-transform duration-700 ease-out"
+            style={{ transform: `translateX(-${activeIndex * 100}%)` }}
           >
-            {safeSlides.map((slide, index) => {
-              const isActive = index === activeIndex;
-
-              return (
-                <article
-                  key={slide.id}
-                  className={[
-                    "absolute inset-0 transition-opacity duration-700 ease-out",
-                    isActive ? "opacity-100" : "pointer-events-none opacity-0",
-                  ].join(" ")}
-                >
+            {safeSlides.map((slide, index) => (
+              <article
+                key={slide.id}
+                className={[
+                  "relative min-h-[300px] min-w-full px-5 py-8 sm:min-h-[360px] sm:px-8 sm:py-10 md:min-h-[390px] md:px-12",
+                  "bg-gradient-to-br",
+                  slide.tone,
+                ].join(" ")}
+              >
+                <div className="pointer-events-none absolute inset-0">
                   <Image
-                    src={slide.image}
-                    alt={slide.alt}
+                    src={slide.image || "/logo41.png"}
+                    alt=""
                     fill
+                    unoptimized
+                    loader={passthroughLoader}
+                    sizes="100vw"
+                    className="object-cover opacity-[0.68]"
                     priority={index === 0}
-                    sizes="(max-width: 768px) 100vw, 1200px"
-                    className="object-cover object-center"
                   />
-                  <div className="absolute inset-0 bg-[linear-gradient(110deg,rgba(5,5,6,0.92)_0%,rgba(8,8,8,0.55)_45%,rgba(12,12,12,0.42)_100%)]" />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.78)_0%,rgba(255,255,255,0.66)_40%,rgba(255,255,255,0.82)_100%)]" />
+                </div>
 
-                  <div className="absolute inset-x-0 bottom-0 top-0 flex items-end px-6 pb-10 pt-20 sm:px-10 sm:pb-12 md:px-14">
-                    <div className="max-w-2xl">
-                      <p className="text-[11px] uppercase tracking-[0.28em] text-white/70">
-                        {slide.badge}
-                      </p>
-                      <h1 className="mt-4 text-balance text-4xl font-light leading-tight tracking-[0.02em] text-white sm:text-5xl lg:text-6xl">
-                        Odontología clínica integral
-                      </h1>
-                      <h2 className="mt-4 text-balance text-2xl font-light leading-tight tracking-[0.02em] text-white/95 sm:text-3xl lg:text-4xl">
-                        {slide.title}
-                      </h2>
-                      <p className="mt-5 max-w-xl text-sm leading-8 tracking-[0.02em] text-white/80 sm:text-base">
-                        {slide.text}
-                      </p>
+                <div className="relative mx-auto flex h-full max-w-4xl flex-col items-center justify-center text-center">
+                  <h1 className="max-w-4xl text-balance text-[2rem] font-black uppercase leading-[1.02] tracking-[0.01em] text-[#5c8fe9] drop-shadow-[0_3px_0_rgba(255,255,255,0.8)] sm:text-[2.45rem] md:text-[3.1rem]">
+                    {slide.title}
+                  </h1>
+                  <p className="mt-4 max-w-3xl text-base font-medium text-slate-800 sm:text-lg md:text-[1.65rem] md:leading-10">
+                    {slide.text}
+                  </p>
 
-                      <div className="mt-8 mb-3.5 flex flex-col gap-3 sm:flex-row sm:items-center">
-                        <Link
-                          href="/agendaProfesionales"
-                          aria-label="Agendar hora"
-                          className="inline-flex w-full justify-center rounded-full border border-white/20 bg-white px-7 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-black transition duration-300 ease-out hover:bg-white/90 sm:w-auto"
-                        >
-                          Agendar hora
-                        </Link>
-                        <Link
-                          href="/agendaProfesionales"
-                          aria-label="Ir a servicios"
-                          className="inline-flex w-full justify-center rounded-full border border-white/35 bg-white/10 px-7 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-white transition duration-300 ease-out hover:bg-white/20 sm:w-auto"
-                        >
-                          Conoce nuestros servicios
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              );
-            })}
-
-            <div className="absolute inset-x-0 bottom-5 z-20 flex items-center justify-between px-4 sm:px-6">
-              <div className="flex items-center gap-2">
-                {safeSlides.map((slide, index) => (
-                  <button
-                    key={slide.id}
-                    type="button"
-                    aria-label={`Mostrar slide ${index + 1}`}
-                    onClick={() => setActiveIndex(index)}
-                    className={[
-                      "h-2.5 rounded-full transition-all duration-300",
-                      activeIndex === index
-                        ? "w-8 bg-white"
-                        : "w-2.5 bg-white/45 hover:bg-white/70",
-                    ].join(" ")}
-                  />
-                ))}
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  aria-label="Slide anterior"
-                  onClick={goPrev}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-black/35 text-white transition duration-300 hover:bg-black/55"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </button>
-                <button
-                  type="button"
-                  aria-label="Siguiente slide"
-                  onClick={goNext}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-black/35 text-white transition duration-300 hover:bg-black/55"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
+                  <Link
+                    href="/agendaProfesionales"
+                    aria-label={slide.cta}
+                    className="mt-6 inline-flex items-center justify-center rounded-full border border-[#d6e2fa] bg-[#f6f9ff] px-8 py-3 text-base font-semibold text-[#3f7ee6] shadow-[0_10px_20px_-16px_rgba(18,43,95,0.7)] transition hover:bg-[#ebf2ff]"
+                  >
+                    {slide.cta}
+                  </Link>
+                </div>
+              </article>
+            ))}
           </div>
+
+          <button
+            type="button"
+            aria-label="Slide anterior"
+            onClick={goPrev}
+            className="absolute left-2 top-1/2 z-20 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#d8e5fc] bg-[#f5f9ff] text-[#5a8ce7] transition hover:bg-[#e9f1ff] sm:left-4 sm:h-11 sm:w-11"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            aria-label="Siguiente slide"
+            onClick={goNext}
+            className="absolute right-2 top-1/2 z-20 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#d8e5fc] bg-[#f5f9ff] text-[#5a8ce7] transition hover:bg-[#e9f1ff] sm:right-4 sm:h-11 sm:w-11"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+
+          <div className="absolute inset-x-0 bottom-4 z-20 flex items-center justify-center gap-2.5 sm:bottom-5">
+            {safeSlides.map((slide, index) => (
+              <button
+                key={slide.id}
+                type="button"
+                aria-label={`Mostrar slide ${index + 1}`}
+                onClick={() => setActiveIndex(index)}
+                className={[
+                  "h-2.5 rounded-full transition-all duration-300",
+                  activeIndex === index ? "w-7 bg-[#6b97e8]" : "w-2.5 bg-[#c6d7f7]",
+                ].join(" ")}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {serviceIcons.map((item) => {
+            const Icon = item.icon;
+            return (
+              <article
+                key={item.label}
+                className="flex flex-col items-center rounded-3xl  bg-gradient-transparent from-[#e8f0ff] to-[#dce8ff] px-4 py-5 text-center"
+              >
+                <div className="inline-flex h-28 w-28 items-center justify-center rounded-full border-[5px] border-[#7fa8ef]/35 bg-[#4f84e8] text-white shadow-[0_14px_30px_-18px_rgba(41,78,145,0.75)]">
+                  <Icon className="h-18 w-18" />
+                </div>
+                <p className="mt-4 text-2xl font-semibold tracking-tight text-[#244a89]">
+                  {item.label}
+                </p>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

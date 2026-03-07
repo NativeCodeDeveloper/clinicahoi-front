@@ -1,157 +1,113 @@
-"use client";
-
-import { useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Building2, MapPin, MessageCircle, Phone } from "lucide-react";
 import RevealOnScroll from "@/Componentes/RevealOnScroll";
 
-const clinicalCases = [
-  {
-    title: "Rehabilitación de sonrisa",
-    description: "Recuperación funcional y estética dental con un protocolo clínico conservador.",
-    image: "/7.png",
-  },
-  {
-    title: "Alineación dental",
-    description: "Planificación ortodóncica para mejorar mordida, función y armonía de la sonrisa.",
-    image: "/8.png",
-  },
-  {
-    title: "Blanqueamiento clínico",
-    description: "Tratamiento progresivo para recuperar luminosidad dental preservando la estructura.",
-    image: "/12.png",
-  },
-  {
-    title: "Carillas dentales",
-    description: "Enfoque restaurador para mejorar forma, color y proporción con resultados naturales.",
-    image: "/10.png",
-  },
-];
-
-const FALLBACK_CASE_IMAGE = "/ac3.png";
+const convenios = ["ANFUP", "FENPRUSS", "FENATS", "Club deportivo Lord Cochrane"];
 
 export default function Seccion3() {
-  const scrollerRef = useRef(null);
-  const [imageErrors, setImageErrors] = useState({});
-
-  const scrollByAmount = (direction) => {
-    const container = scrollerRef.current;
-    if (!container) return;
-
-    const firstCardWidth = container.firstElementChild?.clientWidth ?? 0;
-    const styles = window.getComputedStyle(container);
-    const gap = parseFloat(styles.columnGap || styles.gap || "0");
-    const amount =
-      firstCardWidth > 0 ? Math.round(firstCardWidth + gap) : Math.round(container.clientWidth * 0.82);
-    const nextLeft = direction === "left" ? -amount : amount;
-
-    container.scrollBy({ left: nextLeft, behavior: "smooth" });
-  };
-
   return (
-    <>
-      <section
-        id="casos-clinicos"
-        className="scroll-mt-24 bg-black py-20 text-white sm:py-24"
-      >
-        <div className="mx-auto w-full max-w-7xl px-5 md:px-8 lg:px-10">
+    <section
+      id="convenios"
+      className="scroll-mt-24 bg-[linear-gradient(180deg,rgba(220,233,253,0.88)_0%,rgba(176,199,233,0.84)_100%)] py-20 text-slate-900 sm:py-24"
+    >
+      <div className="mx-auto w-full max-w-7xl px-5 md:px-8 lg:px-10">
+        <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
           <RevealOnScroll>
-            <div className="flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <p className="text-xs uppercase tracking-[0.24em] text-white/65">Casos clinicos</p>
-                <h2 className="mt-4 max-w-3xl text-balance text-3xl font-light leading-tight tracking-[0.02em] sm:text-4xl lg:text-5xl">
-                  Resultados reales, planificados con criterio clínico y odontológico.
-                </h2>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => scrollByAmount("left")}
-                  aria-label="Desplazar casos hacia la izquierda"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition duration-300 hover:bg-white/20"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => scrollByAmount("right")}
-                  aria-label="Desplazar casos hacia la derecha"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition duration-300 hover:bg-white/20"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-          </RevealOnScroll>
-
-          <div
-            ref={scrollerRef}
-            className="hide-scrollbar mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-2"
-          >
-            {clinicalCases.map((item, index) => (
-              <RevealOnScroll
-                key={item.title}
-                className="w-[82%] shrink-0 snap-start sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-2rem)/3)]"
-                delayClass={index === 0 ? "delay-100" : "delay-150"}
-              >
-                <article className="flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#111]">
-                  <div className="relative aspect-[4/5] overflow-hidden">
-                    <Image
-                      src={imageErrors[item.image] ? FALLBACK_CASE_IMAGE : item.image}
-                      alt={item.title}
-                      fill
-                      loading="lazy"
-                      sizes="(max-width: 640px) 82vw, (max-width: 1024px) 48vw, 31vw"
-                      className="object-cover"
-                      onError={() =>
-                        setImageErrors((current) => ({
-                          ...current,
-                          [item.image]: true,
-                        }))
-                      }
-                    />
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.04)_0%,rgba(0,0,0,0.74)_100%)]" />
-                  </div>
-                  <div className="flex min-h-[176px] flex-col p-5 sm:p-6">
-                    <h3 className="h-[3.5rem] overflow-hidden text-xl font-light leading-7 tracking-[0.02em] text-white">
-                      {item.title}
-                    </h3>
-                    <p className="mt-3 h-[5.25rem] overflow-hidden text-sm leading-7 tracking-[0.02em] text-white/72">
-                      {item.description}
-                    </p>
-                  </div>
-                </article>
-              </RevealOnScroll>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="agenda" className="scroll-mt-24 bg-[#050505] py-20 text-white sm:py-24">
-        <div className="mx-auto w-full max-w-7xl px-5 md:px-8 lg:px-10">
-          <RevealOnScroll>
-            <div className="rounded-[2rem] border border-white/10 bg-[linear-gradient(145deg,#111_0%,#050505_55%,#1a1a1a_100%)] px-6 py-14 text-center sm:px-10">
-              <p className="text-xs uppercase tracking-[0.24em] text-white/60">Agenda premium</p>
-              <h2 className="mx-auto mt-4 max-w-3xl text-balance text-3xl font-light leading-tight tracking-[0.02em] sm:text-4xl lg:text-5xl">
-                Reserva tu evaluación y recibe un plan dental personalizado.
+            <article className="h-full rounded-3xl border border-[#c9daf8] bg-white p-7 shadow-[0_20px_45px_-32px_rgba(45,78,145,0.85)] sm:p-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#5e82c7]">Convenios</p>
+              <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[#1f3f76] sm:text-4xl">
+                Convenios activos Salud HOI
               </h2>
-              <p className="mx-auto mt-5 max-w-2xl text-sm leading-8 tracking-[0.02em] text-white/74 sm:text-base">
-                Coordinamos tu hora con el equipo clinico para definir objetivos, tiempos y
-                ruta de tratamiento.
+              <p className="mt-4 text-sm leading-7 text-slate-700 sm:text-base">
+                Beneficios disponibles para instituciones y agrupaciones con atencion en
+                Puerto Aysen.
               </p>
-              <Link
-                href="/reserva-hora"
-                aria-label="Reservar hora"
-                className="mt-8 inline-flex w-full max-w-xs justify-center rounded-full border border-white/20 bg-white px-8 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-black transition duration-300 ease-out hover:bg-white/90"
-              >
-                Reservar hora
-              </Link>
-            </div>
+
+              <ul className="mt-8 grid gap-3">
+                {convenios.map((item) => (
+                  <li
+                    key={item}
+                    className="flex items-center gap-3 rounded-2xl border border-[#d2e0fb] bg-[#f6f9ff] px-4 py-3"
+                  >
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#e5efff] text-[#477fe0]">
+                      <Building2 className="h-5 w-5" />
+                    </span>
+                    <span className="text-sm font-semibold text-slate-800 sm:text-base">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </RevealOnScroll>
+
+          <RevealOnScroll>
+            <article className="h-full rounded-3xl border border-[#c9daf8] bg-gradient-to-br from-[#dce9ff] via-[#edf3ff] to-[#f8fbff] p-7 sm:p-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#5e82c7]">Contacto</p>
+              <h3 className="mt-4 text-2xl font-semibold tracking-tight text-[#1f3f76] sm:text-3xl">
+                Estamos en Puerto Aysen
+              </h3>
+
+              <div className="mt-6 space-y-4">
+                <a
+                  href="tel:+56972228872"
+                  className="flex items-start gap-3 rounded-2xl border border-[#c8dafc] bg-white px-4 py-3"
+                >
+                  <span className="mt-0.5 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#e9f1ff] text-[#4a80e0]">
+                    <Phone className="h-4 w-4" />
+                  </span>
+                  <span className="text-sm font-semibold text-slate-700">+56 9 7222 8872</span>
+                </a>
+
+                <a
+                  href="https://wa.me/56972228872"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-start gap-3 rounded-2xl border border-[#c8dafc] bg-white px-4 py-3"
+                >
+                  <span className="mt-0.5 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#e9f1ff] text-[#4a80e0]">
+                    <MessageCircle className="h-4 w-4" />
+                  </span>
+                  <span className="text-sm font-semibold text-slate-700">WhatsApp Salud HOI</span>
+                </a>
+
+                <a
+                  href="https://maps.google.com/?q=Bernardo+OHiggins+433,+Puerto+Aysen,+Aysen"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-start gap-3 rounded-2xl border border-[#c8dafc] bg-white px-4 py-3"
+                >
+                  <span className="mt-0.5 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#e9f1ff] text-[#4a80e0]">
+                    <MapPin className="h-4 w-4" />
+                  </span>
+                  <span className="text-sm font-semibold leading-6 text-slate-700">
+                    Bernardo O&apos;Higgins 433, Gimnasio IND segundo piso, Puerto Aysen
+                  </span>
+                </a>
+              </div>
+
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/convenios"
+                  className="inline-flex items-center justify-center rounded-full border border-[#c7d9fb] bg-[#f2f7ff] px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-[#e9f1ff]"
+                >
+                  Ver convenios
+                </Link>
+                <Link
+                  href="/agendaProfesionales"
+                  className="inline-flex items-center justify-center rounded-full border border-[#c7d9fb] bg-white px-5 py-3 text-sm font-semibold text-[#3f7ee6] transition hover:bg-[#edf4ff]"
+                >
+                  Reserva Aqui
+                </Link>
+                <Link
+                  href="/contacto"
+                  className="inline-flex items-center justify-center rounded-full border border-[#c7d9fb] bg-[#f2f7ff] px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-[#e9f1ff]"
+                >
+                  Ir a contacto
+                </Link>
+              </div>
+            </article>
           </RevealOnScroll>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }

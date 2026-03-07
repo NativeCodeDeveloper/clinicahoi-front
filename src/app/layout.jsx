@@ -28,27 +28,28 @@ const michroma = Michroma({
 });
 
 export const metadataBase = new URL(
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.ortegaschmuck.cl"
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.saludhoi.cl"
 );
 
 export const metadata = {
   title: {
-    default: "Ortega & Schmuck | Clínica Dental Premium",
-    template: "%s | Ortega & Schmuck",
+    default: "Salud HOI | Centro de Salud Integral",
+    template: "%s | Salud HOI",
   },
   description:
-    "Sitio oficial de Ortega & Schmuck. Odontología clínica integral con tecnología avanzada y planes personalizados.",
+    "Sitio oficial de Salud HOI en Puerto Aysen. Agenda de profesionales, atencion integral y servicios de salud.",
   keywords: [
-    "Ortega & Schmuck",
-    "clinica dental",
-    "odontologia integral",
-    "rehabilitacion oral",
-    "diseno de sonrisa",
-    "implantes dentales",
-    "clinica premium",
+    "Salud HOI",
+    "centro de salud integral",
+    "Puerto Aysen",
+    "kinesiologia",
+    "nutricion",
+    "psicologia",
+    "masoterapia",
+    "agenda de profesionales",
   ],
-  authors: [{ name: "Ortega & Schmuck", url: metadataBase.href }],
-  publisher: "Ortega & Schmuck",
+  authors: [{ name: "Salud HOI", url: metadataBase.href }],
+  publisher: "Salud HOI",
   robots: {
     index: true,
     follow: true,
@@ -60,19 +61,19 @@ export const metadata = {
     canonical: metadataBase.href,
   },
   openGraph: {
-    title: "Ortega & Schmuck | Clínica Dental Premium",
+    title: "Salud HOI | Centro de Salud Integral",
     description:
-      "Experiencia clínica premium con enfoque integral en odontología y rehabilitación oral.",
+      "Atencion integral en salud con agenda por profesional en Puerto Aysen.",
     url: metadataBase.href,
-    siteName: "Ortega & Schmuck",
+    siteName: "Salud HOI",
     locale: "es_CL",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ortega & Schmuck",
+    title: "Salud HOI",
     description:
-      "Odontología clínica premium con protocolos personalizados.",
+      "Centro de salud integral con agenda online por profesional.",
   },
 };
 
