@@ -98,7 +98,7 @@ export default function Portada({ slides = defaultHeroSlides }) {
     >
       <div className="mx-auto w-full max-w-8xl px-3 sm:px-5 md:px-8 lg:px-10">
         <div
-          className="relative overflow-hidden rounded-[1.5rem] border border-white/70 bg-white shadow-[0_30px_70px_-45px_rgba(30,70,145,0.78)] sm:rounded-[1.8rem]"
+          className="relative overflow-hidden rounded-[1.5rem] border border-white/70 bg-white shadow-[0_30px_70px_-45px_rgba(30,70,145,0.55)] sm:rounded-[1.8rem]"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
@@ -123,7 +123,7 @@ export default function Portada({ slides = defaultHeroSlides }) {
                     unoptimized
                     loader={passthroughLoader}
                     sizes="100vw"
-                    className="object-cover opacity-[0.68]"
+                    className="object-cover opacity-[0.58]"
                     priority={index === 0}
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.78)_0%,rgba(255,255,255,0.66)_40%,rgba(255,255,255,0.82)_100%)]" />
