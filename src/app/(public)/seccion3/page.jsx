@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Building2, MapPin, MessageCircle, Phone } from "lucide-react";
+import { BadgeCheck, Building2, FileText, Users } from "lucide-react";
 import RevealOnScroll from "@/Componentes/RevealOnScroll";
 
 const convenios = ["ANFUP", "FENPRUSS", "FENATS", "Club deportivo Lord Cochrane"];
@@ -41,67 +41,59 @@ export default function Seccion3() {
 
           <RevealOnScroll>
             <article className="h-full rounded-3xl border border-[#c9daf8] bg-gradient-to-br from-[#dce9ff] via-[#edf3ff] to-[#f8fbff] p-7 sm:p-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#5e82c7]">Contacto</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#5e82c7]">¿Tienes convenio?</p>
               <h3 className="mt-4 text-2xl font-semibold tracking-tight text-[#1f3f76] sm:text-3xl">
-                Estamos en Puerto Aysen
+                Accede a tus beneficios
               </h3>
+              <p className="mt-3 text-sm leading-7 text-slate-700">
+                Si eres parte de una empresa con convenio, afiliado a una institución o quieres unirte, revisa las opciones disponibles.
+              </p>
 
-              <div className="mt-6 space-y-4">
-                <a
-                  href="tel:+56972228872"
-                  className="flex items-start gap-3 rounded-2xl border border-[#c8dafc] bg-white px-4 py-3"
+              <div className="mt-6 space-y-3">
+                <Link
+                  href="/convenios#convenio-empresa"
+                  className="flex items-center gap-3 rounded-2xl border border-[#c8dafc] bg-white px-4 py-3 transition hover:bg-[#edf4ff]"
                 >
-                  <span className="mt-0.5 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#e9f1ff] text-[#4a80e0]">
-                    <Phone className="h-4 w-4" />
+                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#e9f1ff] text-[#4a80e0]">
+                    <Building2 className="h-4 w-4" />
                   </span>
-                  <span className="text-sm font-semibold text-slate-700">+56 9 7222 8872</span>
-                </a>
+                  <span className="text-sm font-semibold text-slate-700">Convenio empresa</span>
+                </Link>
 
-                <a
-                  href="https://wa.me/56972228872"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-start gap-3 rounded-2xl border border-[#c8dafc] bg-white px-4 py-3"
+                <Link
+                  href="/convenios#afiliados"
+                  className="flex items-center gap-3 rounded-2xl border border-[#c8dafc] bg-white px-4 py-3 transition hover:bg-[#edf4ff]"
                 >
-                  <span className="mt-0.5 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#e9f1ff] text-[#4a80e0]">
-                    <MessageCircle className="h-4 w-4" />
+                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#e9f1ff] text-[#4a80e0]">
+                    <Users className="h-4 w-4" />
                   </span>
-                  <span className="text-sm font-semibold text-slate-700">WhatsApp Salud HOI</span>
-                </a>
+                  <span className="text-sm font-semibold text-slate-700">Afiliados</span>
+                </Link>
 
-                <a
-                  href="https://maps.google.com/?q=Bernardo+OHiggins+433,+Puerto+Aysen,+Aysen"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-start gap-3 rounded-2xl border border-[#c8dafc] bg-white px-4 py-3"
+                <Link
+                  href="/convenios#como-afiliarse"
+                  className="flex items-center gap-3 rounded-2xl border border-[#c8dafc] bg-white px-4 py-3 transition hover:bg-[#edf4ff]"
                 >
-                  <span className="mt-0.5 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#e9f1ff] text-[#4a80e0]">
-                    <MapPin className="h-4 w-4" />
+                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#e9f1ff] text-[#4a80e0]">
+                    <FileText className="h-4 w-4" />
                   </span>
-                  <span className="text-sm font-semibold leading-6 text-slate-700">
-                    Bernardo O&apos;Higgins 433, Gimnasio IND segundo piso, Puerto Aysen
-                  </span>
-                </a>
+                  <span className="text-sm font-semibold text-slate-700">Cómo afiliarse</span>
+                </Link>
               </div>
 
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/convenios"
-                  className="inline-flex items-center justify-center rounded-full border border-[#c7d9fb] bg-[#f2f7ff] px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-[#e9f1ff]"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-[#4d83e8] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#3e76de]"
                 >
-                  Ver convenios
+                  <BadgeCheck className="h-4 w-4" />
+                  Ver todos los convenios
                 </Link>
                 <Link
                   href="/agendaProfesionales"
                   className="inline-flex items-center justify-center rounded-full border border-[#c7d9fb] bg-white px-5 py-3 text-sm font-semibold text-[#3f7ee6] transition hover:bg-[#edf4ff]"
                 >
-                  Reserva Aqui
-                </Link>
-                <Link
-                  href="/contacto"
-                  className="inline-flex items-center justify-center rounded-full border border-[#c7d9fb] bg-[#f2f7ff] px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-[#e9f1ff]"
-                >
-                  Ir a contacto
+                  Reserva Aquí
                 </Link>
               </div>
             </article>

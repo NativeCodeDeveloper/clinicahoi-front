@@ -126,7 +126,7 @@ export default function Portada({ slides = defaultHeroSlides }) {
                     className="object-cover opacity-[0.58]"
                     priority={index === 0}
                   />
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.78)_0%,rgba(255,255,255,0.66)_40%,rgba(255,255,255,0.82)_100%)]" />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.48)_0%,rgba(255,255,255,0.36)_40%,rgba(255,255,255,0.52)_100%)]" />
                 </div>
 
                 <div className="relative mx-auto flex h-full max-w-4xl flex-col items-center justify-center text-center">

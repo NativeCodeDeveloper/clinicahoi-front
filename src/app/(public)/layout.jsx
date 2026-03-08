@@ -18,9 +18,9 @@ export default function PublicLayout({ children }) {
               fill
               priority
               sizes="100vw"
-              className="object-cover opacity-[0.22]"
+              className="object-cover opacity-[0.38]"
             />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(241,246,255,0.72)_0%,rgba(224,236,255,0.66)_45%,rgba(243,248,255,0.74)_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(241,246,255,0.52)_0%,rgba(224,236,255,0.46)_45%,rgba(243,248,255,0.54)_100%)]" />
           </div>
 
           <ToasterClient />

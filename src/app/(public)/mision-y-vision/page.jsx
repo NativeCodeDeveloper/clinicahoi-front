@@ -36,13 +36,13 @@ export default function MisionVisionPage() {
             </Link>
           </div>
 
-          <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-[#d0defa] bg-[#eef4ff] shadow-[0_24px_70px_-38px_rgba(15,23,42,0.5)]">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] border-[#d0defa] bg-[#eef4ff] bg-transparent shadow-[0_24px_70px_-38px_rgba(15,23,42,0.5)]">
             <Image
-              src="/logo42.png"
+              src="/logofullcolor.png"
               alt="Sello Salud HOI"
               fill
               sizes="(max-width: 1024px) 100vw, 42vw"
-              className="object-cover object-center"
+              className="object-contain object-left"
             />
           </div>
         </div>

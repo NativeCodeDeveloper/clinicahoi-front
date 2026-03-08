@@ -31,10 +31,9 @@ const navItems = [
     label: "Convenios",
     children: [
       { label: "Ver convenios", href: "/convenios" },
-      { label: "ANFUP", href: "/convenios#anfup" },
-      { label: "FENPRUSS", href: "/convenios#fenpruss" },
-      { label: "FENATS", href: "/convenios#fenats" },
-      { label: "Club Deportivo Lord Cochrane", href: "/convenios#lord-cochrane" },
+      { label: "Convenio empresa", href: "/convenios#convenio-empresa" },
+      { label: "Afiliados", href: "/convenios#afiliados" },
+      { label: "Cómo afiliarse", href: "/convenios#como-afiliarse" },
     ],
   },
   { label: "Contacto", href: "/contacto" },
@@ -96,23 +95,32 @@ export default function Navbar() {
 
                     <div
                       className={[
-                        "absolute left-0 top-full mt-3 w-[330px] rounded-2xl border border-[#d2e0fb] bg-white p-2 shadow-[0_22px_40px_-28px_rgba(30,70,140,0.8)]",
+                        "absolute left-0 top-full w-[330px] pt-3",
                         openDesktopDropdown === item.label
-                          ? "visible translate-y-0 opacity-100"
-                          : "invisible -translate-y-1 opacity-0",
-                        "transition-all duration-200",
+                          ? "visible"
+                          : "invisible pointer-events-none",
                       ].join(" ")}
                     >
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.label}
-                          href={child.href}
-                          onClick={closeMenus}
-                          className="block rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-[#edf4ff] hover:text-[#3f7ee6]"
-                        >
-                          {child.label}
-                        </Link>
-                      ))}
+                      <div
+                        className={[
+                          "rounded-2xl border border-[#d2e0fb] bg-white p-2 shadow-[0_22px_40px_-28px_rgba(30,70,140,0.8)]",
+                          openDesktopDropdown === item.label
+                            ? "translate-y-0 opacity-100"
+                            : "-translate-y-1 opacity-0",
+                          "transition-all duration-200",
+                        ].join(" ")}
+                      >
+                        {item.children.map((child) => (
+                          <Link
+                            key={child.label}
+                            href={child.href}
+                            onClick={closeMenus}
+                            className="block rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-[#edf4ff] hover:text-[#3f7ee6]"
+                          >
+                            {child.label}
+                          </Link>
+                        ))}
+                      </div>
                     </div>
                   </>
                 ) : (

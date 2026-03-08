@@ -74,7 +74,7 @@ export default function FooterPremiumMedico() {
                 <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf4ff] text-[#3f7ee6]">
                   <MapPin className="h-5 w-5" />
                 </span>
-                <span className="truncate text-base font-semibold text-slate-800">
+                <span className="leading-snug min-w-0 text-base font-semibold text-slate-800">
                   Bernardo O&apos;Higgins 433, Puerto Aysen
                 </span>
               </a>
