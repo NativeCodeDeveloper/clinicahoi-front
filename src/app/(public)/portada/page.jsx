@@ -41,11 +41,11 @@ const defaultHeroSlides = [
 ];
 
 const serviceIcons = [
-  { label: "Kinesiología", icon: StretchHorizontal },
-  { label: "Entrenamientos", icon: Dumbbell },
-  { label: "Nutrición", icon: Salad },
-  { label: "Masoterapia", icon: HandHeart },
-  { label: "Psicología", icon: Brain },
+  { label: "Kinesiología", icon: StretchHorizontal, image: "/kine.png" },
+  { label: "Entrenamientos", icon: Dumbbell, image: "/entrenamiento.png" },
+  { label: "Nutrición", icon: Salad, image: "/nutri.png" },
+  { label: "Masoterapia", icon: HandHeart, image: "/masotera.png" },
+  { label: "Psicología", icon: Brain, image: "/psico.png" },
 ];
 
 const passthroughLoader = ({ src }) => src;
@@ -126,7 +126,7 @@ export default function Portada({ slides = defaultHeroSlides }) {
                     className="object-cover opacity-[0.58]"
                     priority={index === 0}
                   />
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.48)_0%,rgba(255,255,255,0.36)_40%,rgba(255,255,255,0.52)_100%)]" />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.28)_0%,rgba(255,255,255,0.18)_40%,rgba(255,255,255,0.32)_100%)]" />
                 </div>
 
                 <div className="relative mx-auto flex h-full max-w-4xl flex-col items-center justify-center text-center">
@@ -135,7 +135,7 @@ export default function Portada({ slides = defaultHeroSlides }) {
                   </h1>
                   <p className="mt-4 max-w-3xl text-base font-medium text-slate-800 sm:text-lg md:text-[1.65rem] md:leading-10">
                     {slide.text}
-                  </p>
+                  </p> 
 
                   <Link
                     href="/agendaProfesionales"
@@ -188,11 +188,22 @@ export default function Portada({ slides = defaultHeroSlides }) {
             return (
               <article
                 key={item.label}
-                className="flex flex-col items-center rounded-3xl  bg-gradient-transparent from-[#e8f0ff] to-[#dce8ff] px-4 py-5 text-center"
+                className="flex flex-col items-center rounded-3xl bg-gradient-transparent from-[#e8f0ff] to-[#dce8ff] px-4 py-5 text-center"
               >
-                <div className="inline-flex h-28 w-28 items-center justify-center rounded-full border-[5px] border-[#7fa8ef]/35 bg-[#4f84e8] text-white shadow-[0_14px_30px_-18px_rgba(41,78,145,0.75)]">
-                  <Icon className="h-18 w-18" />
-                </div>
+                {/* clase de imagen roedonda en hero */}
+                <div className="relative h-44 w-44 overflow-hidden rounded-full border-[2px] border-[#7fa8ef]/30 shadow-[0_14px_30px_-18px_rgba(41,78,145,0.75)]">
+                    <Image
+                    src={item.image}
+                    alt={item.label}
+                    fill
+                    sizes="1160px"
+                    priority
+                    unoptimized
+                    loader={passthroughLoader}
+                    className="object-cover"
+                    />
+                </div> 
+
                 <p className="mt-4 text-2xl font-semibold tracking-tight text-[#244a89]">
                   {item.label}
                 </p>

@@ -19,7 +19,7 @@ export default function FooterPremiumMedico() {
   return (
     <footer
       id="footer"
-      className="relative mt-8 overflow-hidden bg-[linear-gradient(180deg,#edf4ff_0%,#d8e6fb_42%,#b9d1f2_100%)] text-slate-900"
+      className="relative overflow-hidden bg-[linear-gradient(180deg,rgba(237,244,255,0.94)_0%,rgba(216,230,251,0.92)_42%,rgba(185,209,242,0.90)_100%)] text-slate-900"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.55),transparent_40%)]" />
       <div className="pointer-events-none absolute -left-14 top-8 h-56 w-56 rounded-full bg-white/35 blur-3xl" />
