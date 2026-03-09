@@ -52,25 +52,52 @@ const passthroughLoader = ({ src }) => src;
 
 export default function Portada({ slides = defaultHeroSlides }) {
   const safeSlides = slides.length > 0 ? slides : defaultHeroSlides;
+  // Clone first slide at end for seamless forward loop
+  const extendedSlides = [...safeSlides, safeSlides[0]];
+
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(true);
   const touchStartX = useRef(null);
+
+  // Dot indicator maps clone index back to 0
+  const activeDotIndex = activeIndex >= safeSlides.length ? 0 : activeIndex;
 
   useEffect(() => {
     if (safeSlides.length <= 1) return undefined;
 
     const intervalId = setInterval(() => {
-      setActiveIndex((current) => (current + 1) % safeSlides.length);
+      setActiveIndex((current) => current + 1);
     }, 5500);
 
     return () => clearInterval(intervalId);
   }, [safeSlides.length]);
 
+  // Re-enable transition after snap
+  useEffect(() => {
+    if (!isTransitioning) {
+      const t = setTimeout(() => setIsTransitioning(true), 20);
+      return () => clearTimeout(t);
+    }
+  }, [isTransitioning]);
+
+  // When clone finishes transitioning, snap silently back to real first slide
+  const handleTransitionEnd = () => {
+    if (activeIndex === safeSlides.length) {
+      setIsTransitioning(false);
+      setActiveIndex(0);
+    }
+  };
+
   const goPrev = () => {
-    setActiveIndex((current) => (current - 1 + safeSlides.length) % safeSlides.length);
+    setIsTransitioning(true);
+    setActiveIndex((current) =>
+      current <= 0 ? safeSlides.length - 1 : current - 1
+    );
   };
 
   const goNext = () => {
-    setActiveIndex((current) => (current + 1) % safeSlides.length);
+    setIsTransitioning(true);
+    setActiveIndex((current) => current + 1);
   };
 
   const handleTouchStart = (event) => {
@@ -103,12 +130,16 @@ export default function Portada({ slides = defaultHeroSlides }) {
           onTouchEnd={handleTouchEnd}
         >
           <div
-            className="flex transition-transform duration-700 ease-out"
-            style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+            className="flex"
+            style={{
+              transform: `translateX(-${activeIndex * 100}%)`,
+              transition: isTransitioning ? "transform 700ms ease-out" : "none",
+            }}
+            onTransitionEnd={handleTransitionEnd}
           >
-            {safeSlides.map((slide, index) => (
+            {extendedSlides.map((slide, index) => (
               <article
-                key={slide.id}
+                key={`${slide.id}-${index}`}
                 className={[
                   "relative min-h-[300px] min-w-full px-5 py-8 sm:min-h-[360px] sm:px-8 sm:py-10 md:min-h-[390px] md:px-12",
                   "bg-gradient-to-br",
@@ -123,7 +154,7 @@ export default function Portada({ slides = defaultHeroSlides }) {
                     unoptimized
                     loader={passthroughLoader}
                     sizes="100vw"
-                    className="object-cover opacity-[0.58]"
+                    className="object-cover opacity-[0.82]"
                     priority={index === 0}
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.28)_0%,rgba(255,255,255,0.18)_40%,rgba(255,255,255,0.32)_100%)]" />
@@ -135,7 +166,7 @@ export default function Portada({ slides = defaultHeroSlides }) {
                   </h1>
                   <p className="mt-4 max-w-3xl text-base font-medium text-slate-800 sm:text-lg md:text-[1.65rem] md:leading-10">
                     {slide.text}
-                  </p> 
+                  </p>
 
                   <Link
                     href="/agendaProfesionales"
@@ -172,10 +203,13 @@ export default function Portada({ slides = defaultHeroSlides }) {
                 key={slide.id}
                 type="button"
                 aria-label={`Mostrar slide ${index + 1}`}
-                onClick={() => setActiveIndex(index)}
+                onClick={() => {
+                  setIsTransitioning(true);
+                  setActiveIndex(index);
+                }}
                 className={[
                   "h-2.5 rounded-full transition-all duration-300",
-                  activeIndex === index ? "w-7 bg-[#6b97e8]" : "w-2.5 bg-[#c6d7f7]",
+                  activeDotIndex === index ? "w-7 bg-[#6b97e8]" : "w-2.5 bg-[#c6d7f7]",
                 ].join(" ")}
               />
             ))}
@@ -183,33 +217,29 @@ export default function Portada({ slides = defaultHeroSlides }) {
         </div>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          {serviceIcons.map((item) => {
-            const Icon = item.icon;
-            return (
-              <article
-                key={item.label}
-                className="flex flex-col items-center rounded-3xl bg-gradient-transparent from-[#e8f0ff] to-[#dce8ff] px-4 py-5 text-center"
-              >
-                {/* clase de imagen roedonda en hero */}
-                <div className="relative h-44 w-44 overflow-hidden rounded-full border-[2px] border-[#7fa8ef]/30 shadow-[0_14px_30px_-18px_rgba(41,78,145,0.75)]">
-                    <Image
-                    src={item.image}
-                    alt={item.label}
-                    fill
-                    sizes="1160px"
-                    priority
-                    unoptimized
-                    loader={passthroughLoader}
-                    className="object-cover"
-                    />
-                </div> 
+          {serviceIcons.map((item) => (
+            <article
+              key={item.label}
+              className="flex flex-col items-center rounded-3xl px-4 py-5 text-center"
+            >
+              <div className="relative h-44 w-44 overflow-hidden rounded-full border-[2px] border-[#7fa8ef]/30 shadow-[0_14px_30px_-18px_rgba(41,78,145,0.75)]">
+                <Image
+                  src={item.image}
+                  alt={item.label}
+                  fill
+                  sizes="176px"
+                  priority
+                  unoptimized
+                  loader={passthroughLoader}
+                  className="object-cover"
+                />
+              </div>
 
-                <p className="mt-4 text-2xl font-semibold tracking-tight text-[#244a89]">
-                  {item.label}
-                </p>
-              </article>
-            );
-          })}
+              <p className="mt-4 text-2xl font-semibold tracking-tight text-[#244a89]">
+                {item.label}
+              </p>
+            </article>
+          ))}
         </div>
       </div>
     </section>
