@@ -7,7 +7,7 @@ const specialties = [
   {
     id: "kinesiologia",
     area: "Area Kinesiologica",
-    professional: "Camilo Flores Renin",
+    professional: "",
     services: ["Evaluacion Kinesiologica", "Terapia kinesiologica"],
     description:
       "Valoracion integral del movimiento, postura y funcionalidad para planificar rehabilitacion personalizada.",
@@ -15,7 +15,7 @@ const specialties = [
   {
     id: "psicologia",
     area: "Area Psicologica",
-    professional: "Valentina Cortes Lagos",
+    professional: "",
     services: ["Terapia Psicologica Adulto", "Terapia Psicologica Infanto Juvenil"],
     description:
       "Acompanamiento emocional para adultos, ninas, ninos y adolescentes, con enfoque adaptado a cada etapa.",
@@ -23,15 +23,15 @@ const specialties = [
   {
     id: "fonoaudiologia",
     area: "Area Fonoaudiologica",
-    professional: "Valentina Jofre Torres",
+    professional: "",
     services: ["Terapia fonoaudiologica", "Lavado de Oidos"],
     description:
       "Evaluacion e intervencion en habla, lenguaje, voz y comunicacion, en atencion de ninos y adultos.",
   },
   {
     id: "nutricion",
-    area: "Area Nutricional",
-    professional: "Vanessa Garcia Paillan",
+    area: "Área Nutricional",
+    professional: "",
     services: [
       "Evaluacion nutricional (composicion corporal)",
       "Evaluacion Nutricional + plan de alimentacion",
@@ -43,7 +43,7 @@ const specialties = [
     id: "deportivo",
     area: "Area Deportiva",
     professional:
-      "Carol Valderas Maldonado, Matias Oyarzun Andrade, Diego Aguilar Contreras, Nicolas Garces Piucol",
+      "",
     services: ["Entrenamientos grupales", "Entrenamientos personalizados"],
     description:
       "Programas de entrenamiento guiados para mejorar condicion fisica, fuerza y bienestar general.",
@@ -51,7 +51,7 @@ const specialties = [
   {
     id: "masoterapia",
     area: "Area Masoterapia",
-    professional: "Camila Villalobos Conejeros",
+    professional: "",
     services: [
       "Masaje relajante",
       "Masaje descontracturante",
@@ -64,7 +64,7 @@ const specialties = [
   {
     id: "complementarias",
     area: "Terapias Complementarias",
-    professional: "Carola Quezada",
+    professional: "",
     services: ["Constelaciones Familiares"],
     description:
       "Terapia sistemica para comprender y armonizar dinamicas familiares que impactan el bienestar emocional.",

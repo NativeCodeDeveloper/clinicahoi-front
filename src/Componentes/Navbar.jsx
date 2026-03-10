@@ -17,7 +17,7 @@ const navItems = [
   {
     label: "Servicios",
     children: [
-      { label: "Ver todos los servicios", href: "/servicios" },
+      { label: "Ver todos los servicios", href: "/agendaProfesionales" },
       { label: "Kinesiologia", href: "/servicios#kinesiologia" },
       { label: "Psicologia", href: "/servicios#psicologia" },
       { label: "Fonoaudiologia", href: "/servicios#fonoaudiologia" },
