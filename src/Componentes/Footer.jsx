@@ -31,6 +31,7 @@ export default function FooterPremiumMedico() {
             <Image src="/logofullcolor.png" alt="Salud HOI" fill sizes="208px" className="object-contain object-left" />
           </div>
 
+          {/* CTA agenda — comentado temporalmente, reactivar si se habilita agenda online
           <Link
             href="/reserva-hora"
             className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d6e2fa] bg-[#f6f9ff] px-4 py-2.5 text-sm font-semibold text-[#3f7ee6] shadow-[0_8px_20px_-16px_rgba(20,40,90,0.5)] transition hover:bg-[#ebf2ff]"
@@ -38,6 +39,16 @@ export default function FooterPremiumMedico() {
             <CalendarCheck2 className="h-4 w-4" />
             Reserva Aqui
           </Link>
+          */}
+          <a
+            href="https://wa.me/56972228872"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d6e2fa] bg-[#f6f9ff] px-4 py-2.5 text-sm font-semibold text-[#3f7ee6] shadow-[0_8px_20px_-16px_rgba(20,40,90,0.5)] transition hover:bg-[#ebf2ff]"
+          >
+            <CalendarCheck2 className="h-4 w-4" />
+            Reserva Aqui
+          </a>
         </div>
 
         <div className="grid grid-cols-1 items-stretch gap-5 md:grid-cols-3">

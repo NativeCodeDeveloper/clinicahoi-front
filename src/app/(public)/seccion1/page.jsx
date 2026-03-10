@@ -71,7 +71,7 @@ export default async function Seccion1() {
       <div className="mx-auto w-full max-w-7xl px-7 md:px-8 lg:px-10">
         <RevealOnScroll>
           <div className="text-center">
-            <p className="text-[2.05rem] font-black uppercase tracking-tight text-slate-900 sm:text-[2.5rem]">
+            <p className="mt-6 text-[2.05rem] font-black uppercase tracking-tight text-slate-900 sm:text-[2.5rem]">
               Informaciones <span className="text-[#4580e1]">HOI</span>
             </p>
             <div className="mx-auto mt-5 flex max-w-4xl items-center gap-3">

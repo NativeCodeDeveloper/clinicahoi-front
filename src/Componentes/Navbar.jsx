@@ -138,12 +138,21 @@ export default function Navbar() {
         </nav>
 
         <div className="flex shrink-0 items-center gap-2.5">
+          {/* CTA agenda — comentado temporalmente, reactivar si se habilita agenda online
           <Link
             href="/agendaProfesionales"
             aria-label="Reservar hora"
             className="hidden rounded-full border border-[#d6e2fa] bg-[#f6f9ff] px-6 py-3 text-base font-semibold text-[#3f7ee6] shadow-[0_8px_20px_-16px_rgba(20,40,90,0.5)] transition hover:bg-[#ebf2ff] sm:inline-flex"
           >
-            Reserva Aqui
+            Nuestros servicios
+          </Link>
+          */}
+          <Link
+            href="/agendaProfesionales"
+            aria-label="Ir a servicios"
+            className="hidden rounded-full border border-[#d6e2fa] bg-[#f6f9ff] px-6 py-3 text-base font-semibold text-[#3f7ee6] shadow-[0_8px_20px_-16px_rgba(20,40,90,0.5)] transition hover:bg-[#ebf2ff] sm:inline-flex"
+          >
+            Ir a servicios
           </Link>
 
           <button
@@ -221,13 +230,22 @@ export default function Navbar() {
               )}
             </div>
           ))}
+          {/* CTA agenda móvil — comentado temporalmente, reactivar si se habilita agenda online
           <Link
             href="/agendaProfesionales"
             onClick={closeMenus}
             aria-label="Agendar hora desde menu movil"
             className="mt-2 rounded-xl border border-[#d6e2fa] bg-[#f6f9ff] px-4 py-3 text-center text-base font-semibold text-[#3f7ee6] transition hover:bg-[#ebf2ff]"
           >
-            Reserva Aqui
+            Nuestras servicios
+          </Link>
+          */}
+          <Link
+            href="/agendaProfesionales"
+            onClick={closeMenus}
+            className="mt-2 rounded-xl border border-[#d6e2fa] bg-[#f6f9ff] px-4 py-3 text-center text-base font-semibold text-[#3f7ee6] transition hover:bg-[#ebf2ff]"
+          >
+            Ir a servicios
           </Link>
         </div>
       </div>

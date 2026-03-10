@@ -89,12 +89,22 @@ export default function Seccion3() {
                   <BadgeCheck className="h-4 w-4" />
                   Ver todos los convenios
                 </Link>
+                {/* CTA agenda — comentado temporalmente, reactivar si se habilita agenda online
                 <Link
                   href="/agendaProfesionales"
                   className="inline-flex items-center justify-center rounded-full border border-[#c7d9fb] bg-white px-5 py-3 text-sm font-semibold text-[#3f7ee6] transition hover:bg-[#edf4ff]"
                 >
                   Reserva Aquí
                 </Link>
+                */}
+                <a
+                  href="https://wa.me/56972228872"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center rounded-full border border-[#c7d9fb] bg-white px-5 py-3 text-sm font-semibold text-[#3f7ee6] transition hover:bg-[#edf4ff]"
+                >
+                  Reserva Aquí
+                </a>
               </div>
             </article>
           </RevealOnScroll>

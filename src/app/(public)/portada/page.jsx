@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import {
   Brain,
   ChevronLeft,
@@ -66,7 +65,7 @@ export default function Portada({ slides = defaultHeroSlides }) {
     if (safeSlides.length <= 1) return undefined;
 
     const intervalId = setInterval(() => {
-      setActiveIndex((current) => current + 1);
+      setActiveIndex((current) => current >= safeSlides.length ? 1 : current + 1);
     }, 5500);
 
     return () => clearInterval(intervalId);
@@ -97,7 +96,7 @@ export default function Portada({ slides = defaultHeroSlides }) {
 
   const goNext = () => {
     setIsTransitioning(true);
-    setActiveIndex((current) => current + 1);
+    setActiveIndex((current) => current >= safeSlides.length ? 1 : current + 1);
   };
 
   const handleTouchStart = (event) => {
@@ -168,6 +167,7 @@ export default function Portada({ slides = defaultHeroSlides }) {
                     {slide.text}
                   </p>
 
+                  {/* CTA agenda — comentado temporalmente, reactivar si se habilita agenda online
                   <Link
                     href="/agendaProfesionales"
                     aria-label={slide.cta}
@@ -175,6 +175,16 @@ export default function Portada({ slides = defaultHeroSlides }) {
                   >
                     {slide.cta}
                   </Link>
+                  */}
+                  <a
+                    href="https://wa.me/56972228872"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Reservar por WhatsApp"
+                    className="mt-6 inline-flex items-center justify-center gap-2 rounded-full border border-[#d6e2fa] bg-[#f6f9ff] px-8 py-3 text-base font-semibold text-[#3f7ee6] shadow-[0_10px_20px_-16px_rgba(18,43,95,0.7)] transition hover:bg-[#ebf2ff]"
+                  >
+                    {slide.cta}
+                  </a>
                 </div>
               </article>
             ))}

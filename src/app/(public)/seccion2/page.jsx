@@ -28,6 +28,7 @@ export default function Seccion2() {
     >
       <div className="mx-auto w-full max-w-7xl px-5 md:px-8 lg:px-10">
         <RevealOnScroll>
+
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#5e82c7]">Servicios</p>
           <h2 className="mt-4 max-w-4xl text-balance text-3xl font-semibold leading-tight tracking-tight text-[#19376c] sm:text-4xl lg:text-5xl">
             Revisa las diferentes prestaciones de salud con las cuales contamos, para la atencion integral y seguimiento profesional.
@@ -65,7 +66,7 @@ export default function Seccion2() {
               href="/agendaProfesionales"
               className="mt-6 inline-flex items-center gap-2 rounded-full border border-[#c8dafc] bg-[#f4f8ff] px-6 py-3 text-sm font-semibold text-[#3f7ee6] transition hover:bg-[#e9f1ff]"
             >
-              Ir a agenda de profesionales
+              Ir a servicios
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

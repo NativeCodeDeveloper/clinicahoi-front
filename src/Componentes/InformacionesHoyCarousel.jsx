@@ -7,34 +7,58 @@ import RevealOnScroll from "@/Componentes/RevealOnScroll";
 export default function InformacionesHoyCarousel({ cards = [] }) {
   const scrollerRef = useRef(null);
 
+  // Duplicate cards for seamless infinite loop — backend cards se agregan normal via prop
+  const displayCards = cards.length > 1 ? [...cards, ...cards] : cards;
+
+  const getCardAmount = () => {
+    const container = scrollerRef.current;
+    if (!container) return 0;
+    const firstCard = container.firstElementChild;
+    const firstCardWidth = firstCard?.clientWidth ?? 0;
+    const styles = window.getComputedStyle(container);
+    const gap = parseFloat(styles.columnGap || styles.gap || "0");
+    return firstCardWidth > 0
+      ? Math.round(firstCardWidth + gap)
+      : Math.round(container.clientWidth * 0.84);
+  };
+
   const scrollByAmount = (direction) => {
     const container = scrollerRef.current;
     if (!container) return;
-
-    const firstCardWidth = container.firstElementChild?.clientWidth ?? 0;
-    const styles = window.getComputedStyle(container);
-    const gap = parseFloat(styles.columnGap || styles.gap || "0");
-    const amount =
-      firstCardWidth > 0 ? Math.round(firstCardWidth + gap) : Math.round(container.clientWidth * 0.84);
-    const lastOffset = Math.max(container.scrollWidth - container.clientWidth, 0);
-
-    if (direction === "right" && container.scrollLeft + amount >= lastOffset - 4) {
-      container.scrollTo({ left: 0, behavior: "smooth" });
-      return;
-    }
-
-    const nextLeft = direction === "left" ? -amount : amount;
-    container.scrollBy({ left: nextLeft, behavior: "smooth" });
+    const amount = getCardAmount();
+    container.scrollBy({ left: direction === "left" ? -amount : amount, behavior: "smooth" });
   };
 
+  // Snap invisible de vuelta a la primera mitad cuando llega a la segunda
   useEffect(() => {
     const container = scrollerRef.current;
-    if (!container || cards.length <= 1) return undefined;
+    if (!container || cards.length <= 1) return;
 
-    const id = setInterval(() => {
-      scrollByAmount("right");
-    }, 5200);
+    let ticking = false;
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const half = container.scrollWidth / 2;
+        if (container.scrollLeft >= half) {
+          container.scrollLeft -= half;
+        } else if (container.scrollLeft < 0) {
+          container.scrollLeft += half;
+        }
+        ticking = false;
+      });
+    };
 
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [cards.length]);
+
+  // Auto-avance
+  useEffect(() => {
+    const container = scrollerRef.current;
+    if (!container || cards.length <= 1) return;
+
+    const id = setInterval(() => scrollByAmount("right"), 5200);
     return () => clearInterval(id);
   }, [cards.length]);
 
@@ -53,9 +77,9 @@ export default function InformacionesHoyCarousel({ cards = [] }) {
         ref={scrollerRef}
         className="hide-scrollbar flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2"
       >
-        {cards.map((item, index) => (
+        {displayCards.map((item, index) => (
           <RevealOnScroll
-            key={item.id}
+            key={`${item.id}-${index}`}
             className="w-[86%] shrink-0 snap-start sm:w-[72%] md:w-[48%] lg:w-[calc((100%-2.5rem)/3)]"
             delayClass={index % 2 === 0 ? "delay-100" : "delay-150"}
           >
@@ -65,7 +89,7 @@ export default function InformacionesHoyCarousel({ cards = [] }) {
                   src={item.image}
                   alt={item.title}
                   loading="lazy"
-                  className="h-[230px] w-full object-cover sm:h-[250px]"
+                  className="h-[230px] w-full object-contain sm:h-[250px]"
                 />
               </div>
               <h3 className="mt-6 text-balance text-[2.1rem] font-black leading-[1.15] tracking-tight text-[#262323] sm:text-[2.55rem]">

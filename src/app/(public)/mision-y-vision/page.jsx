@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 
 export default function MisionVisionPage() {
   return (
@@ -28,12 +27,22 @@ export default function MisionVisionPage() {
               servicios de salud especializados a toda la comunidad.
             </p>
 
+            {/* CTA agenda — comentado temporalmente, reactivar si se habilita agenda online
             <Link
               href="/agendaProfesionales"
               className="mt-10 inline-flex rounded-full bg-[#4d83e8] px-7 py-3 text-sm font-semibold text-white transition hover:bg-[#3e76de]"
             >
               Reservar evaluacion
             </Link>
+            */}
+            <a
+              href="https://wa.me/56972228872"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-10 inline-flex rounded-full bg-[#4d83e8] px-7 py-3 text-sm font-semibold text-white transition hover:bg-[#3e76de]"
+            >
+              Reservar evaluacion
+            </a>
           </div>
 
           <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] border-[#d0defa] bg-[#eef4ff] bg-transparent shadow-[0_24px_70px_-38px_rgba(15,23,42,0.5)]">
