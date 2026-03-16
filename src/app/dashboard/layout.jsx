@@ -123,8 +123,10 @@ export default function DashboardLayout({ children }) {
 
 
 
-                            {/* — Presupuesto — */}
-                            <details className="group">
+                            {/* — Presupuesto
+
+
+                                                         <details className="group">
                                 <summary className="flex items-center justify-between px-2 py-1 text-[11px] font-medium text-white/30 hover:text-white/45 transition-colors duration-200 cursor-pointer list-none select-none tracking-normal">
                                     <span>Presupuesto</span>
                                     <svg className="h-3 w-3 text-white/15 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor">
@@ -159,6 +161,10 @@ export default function DashboardLayout({ children }) {
                                     </Link>
                                 </div>
                             </details>
+
+
+                             — */}
+
 
 
 
@@ -215,14 +221,14 @@ export default function DashboardLayout({ children }) {
                                         className="group/link flex items-center gap-2.5 rounded-md px-2 py-[6px] text-[12.5px] font-light text-white/50 hover:text-white/90 hover:bg-white/[0.05] transition-all duration-200"
                                     >
                                         <span className="h-[3px] w-[3px] rounded-full bg-white/15 group-hover/link:bg-violet-400 group-hover/link:shadow-[0_0_6px_rgba(139,92,246,0.6)] transition-all duration-200" />
-                                        Registro de Profesionales
+                                        Recursos de Agenda
                                     </Link>
                                     <Link
                                         href="/dashboard/serviciosAgendamiento"
                                         className="group/link flex items-center gap-2.5 rounded-md px-2 py-[6px] text-[12.5px] font-light text-white/50 hover:text-white/90 hover:bg-white/[0.05] transition-all duration-200"
                                     >
                                         <span className="h-[3px] w-[3px] rounded-full bg-white/15 group-hover/link:bg-violet-400 group-hover/link:shadow-[0_0_6px_rgba(139,92,246,0.6)] transition-all duration-200" />
-                                        Prestaciones en Agenda
+                                        Tipos de Atención
                                     </Link>
                                     <Link
                                         href="/dashboard/tarifaServicio"

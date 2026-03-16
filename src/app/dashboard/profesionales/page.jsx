@@ -8,6 +8,7 @@ import { ButtonDinamic } from "@/Componentes/ButtonDinamic";
 import { SelectDinamic } from "@/Componentes/SelectDinamic";
 import ToasterClient from "@/Componentes/ToasterClient";
 import toast from 'react-hot-toast';
+import {InfoButton} from "@/Componentes/InfoButton";
 
 export default function Profesionales() {
     const [listaProfesionales, setListaProfesionales] = useState([]);
@@ -207,13 +208,16 @@ export default function Profesionales() {
 
                 {/* Header */}
                 <div className="mb-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                    <div className="flex flex-col gap-1">
-                        <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-                            Profesionales
-                        </h1>
-                        <p className="text-sm text-slate-500">
-                            Gestión de profesionales registrados en la plataforma
-                        </p>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div className="flex flex-col gap-1">
+                            <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+                                Agendas
+                            </h1>
+                            <p className="text-sm text-slate-500">
+                                Defina y gestione las agendas por profesional, especialidad, box o servicio
+                            </p>
+                        </div>
+                        <InfoButton informacion={'En esta sección podrá crear y administrar las agendas de atención de la clínica.\n\nCada agenda puede estar asociada a un profesional, una especialidad, un box o un servicio específico.\n\nPara crear una nueva agenda, complete los campos del formulario y presione "Guardar". Para modificar una existente, selecciónela desde el listado inferior, realice los cambios y presione "Actualizar".\n'}/>
                     </div>
                 </div>
 
@@ -224,33 +228,33 @@ export default function Profesionales() {
                         <div className="space-y-1">
                             <h2 className="text-base font-semibold text-slate-900">
                                 Ingreso y edición
-                                <span className="ml-2 text-blue-700">(Profesional)</span>
+                                <span className="ml-2 text-blue-700">(Agenda)</span>
                             </h2>
                             <p className="text-sm text-slate-500">
-                                Complete los campos para registrar o actualizar un profesional.
+                                Complete los campos para registrar o actualizar una agenda.
                             </p>
                         </div>
 
                         <div className="grid grid-cols-1 gap-5">
                             <div className="space-y-1.5">
-                                <label className="text-sm font-medium text-slate-700">Nombre del profesional</label>
+                                <label className="text-sm font-medium text-slate-700">Nombre de la agenda</label>
 
                                 <InputTextDinamic
                                     value={nombreProfesional}
                                     onChange={(e) => setNombreProfesional(e.target.value)}
-                                    placeholder="Ej: Dr. Juan Pérez"
+                                    placeholder="Ej: Dr. Juan Pérez, Box 1, Kinesiología"
                                     className="w-full"
                                 />
 
-                                <p className="text-xs text-slate-400">Solo se permiten letras y espacios.</p>
+                                <p className="text-xs text-slate-400">Puede ser un profesional, especialidad, box o servicio.</p>
                             </div>
 
                             <div className="space-y-1.5">
-                                <label className="text-sm font-medium text-slate-700">Descripción del profesional</label>
+                                <label className="text-sm font-medium text-slate-700">Descripción de la agenda</label>
                                 <TextAreaDinamic
                                     value={descripcionProfesional}
                                     onChange={(e) => setDescripcionProfesional(e.target.value)}
-                                    placeholder="Ej: Especialista en ortodoncia con 10 años de experiencia"
+                                    placeholder="Ej: Agenda de atención para kinesiología, lunes a viernes"
                                     className="w-full"
                                 />
                             </div>
@@ -260,22 +264,21 @@ export default function Profesionales() {
                             <ButtonDinamic
                                 onClick={() => insertarProfesional(nombreProfesional,descripcionProfesional)}
                             >
-                                Guardar Profesional
+                                Guardar Agenda
                             </ButtonDinamic>
 
                             <ButtonDinamic
                                 onClick={() => actualizarProfesional(nombreProfesional,descripcionProfesional,id_profesional)}
                                 className="bg-blue-700 hover:bg-blue-600"
                             >
-                                Actualizar Profesional
+                                Actualizar Agenda
                             </ButtonDinamic>
-
 
                             <ButtonDinamic
                                 onClick={() => eliminarProfesional(id_profesional)}
-                                className="bg-red-700 hover:bg-red-600"
+                                className="bg-red-600 hover:bg-red-500"
                             >
-                                Eliminar Profesional
+                                Eliminar Agenda
                             </ButtonDinamic>
                         </div>
                     </div>
@@ -284,8 +287,8 @@ export default function Profesionales() {
                 {/* Selector */}
                 <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                     <div className="space-y-1 mb-5">
-                        <h2 className="text-base font-semibold text-slate-900">Seleccionar profesional</h2>
-                        <p className="text-sm text-slate-500">Seleccione un profesional para editar o eliminar.</p>
+                        <h2 className="text-base font-semibold text-slate-900">Seleccionar agenda</h2>
+                        <p className="text-sm text-slate-500">Seleccione una agenda para editar o eliminar.</p>
                     </div>
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
                         <div className="flex-1">
@@ -297,7 +300,7 @@ export default function Profesionales() {
                                     label: profesional.nombreProfesional
                                 }))}
 
-                                placeholder="Selecciona un profesional"
+                                placeholder="Selecciona una agenda"
                             />
                         </div>
                         <ButtonDinamic
