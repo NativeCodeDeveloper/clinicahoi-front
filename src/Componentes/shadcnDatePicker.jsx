@@ -47,8 +47,11 @@ export default function ShadcnDatePicker({label = "Fecha", value, onChange}) {
                             setDate(selectedDate)
                             setOpen(false)
                             if (onChange && selectedDate) {
-                                // Emitir ISO yyyy-mm-dd
-                                onChange(selectedDate.toISOString().split("T")[0])
+                                // Emitir yyyy-mm-dd en hora local (evita desfase UTC)
+                                const y = selectedDate.getFullYear()
+                                const m = String(selectedDate.getMonth() + 1).padStart(2, "0")
+                                const d = String(selectedDate.getDate()).padStart(2, "0")
+                                onChange(`${y}-${m}-${d}`)
                             }
                         }}
                     />

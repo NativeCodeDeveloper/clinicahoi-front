@@ -1,6 +1,8 @@
 // app/dashboard/layout.jsx
+import { ClerkProvider } from "@clerk/nextjs";
 import Link from "next/link";
 import MobileNav from "./MobileNav";
+import SignOutBtn from "./SignOutBtn";
 
 export const metadata = {
     title: "Dashboard",
@@ -9,6 +11,7 @@ export const metadata = {
 
 export default function DashboardLayout({ children }) {
     return (
+        <ClerkProvider>
         <div className="h-screen w-full overflow-hidden bg-white">
             <div className="flex h-full w-full">
                 {/* Sidebar */}
@@ -168,19 +171,32 @@ export default function DashboardLayout({ children }) {
                                     </svg>
                                 </summary>
                                 <div className="mt-1 space-y-0.5">
-                                    <Link
-                                        href="/dashboard/publicaciones"
-                                        className="group/link flex items-center gap-2.5 rounded-md px-2 py-[6px] text-[12.5px] font-light text-white/50 hover:text-white/90 hover:bg-white/[0.05] transition-all duration-200"
-                                    >
-                                        <span className="h-[3px] w-[3px] rounded-full bg-white/15 group-hover/link:bg-violet-400 group-hover/link:shadow-[0_0_6px_rgba(139,92,246,0.6)] transition-all duration-200" />
-                                        Publicaciones Estandar
-                                    </Link>
+
                                     <Link
                                         href="/dashboard/portadaEdit"
                                         className="group/link flex items-center gap-2.5 rounded-md px-2 py-[6px] text-[12.5px] font-light text-white/50 hover:text-white/90 hover:bg-white/[0.05] transition-all duration-200"
                                     >
                                         <span className="h-[3px] w-[3px] rounded-full bg-white/15 group-hover/link:bg-violet-400 group-hover/link:shadow-[0_0_6px_rgba(139,92,246,0.6)] transition-all duration-200" />
                                         Carrusel de Portada
+                                    </Link>
+
+
+
+                                    <Link
+                                        href="/dashboard/publicacionesTituloDescripcion"
+                                        className="group/link flex items-center gap-2.5 rounded-md px-2 py-[6px] text-[12.5px] font-light text-white/50 hover:text-white/90 hover:bg-white/[0.05] transition-all duration-200"
+                                    >
+                                        <span className="h-[3px] w-[3px] rounded-full bg-white/15 group-hover/link:bg-violet-400 group-hover/link:shadow-[0_0_6px_rgba(139,92,246,0.6)] transition-all duration-200" />
+                                        Carrusel Seccion 1
+                                    </Link>
+
+
+                                    <Link
+                                        href="/dashboard/publicaciones"
+                                        className="group/link flex items-center gap-2.5 rounded-md px-2 py-[6px] text-[12.5px] font-light text-white/50 hover:text-white/90 hover:bg-white/[0.05] transition-all duration-200"
+                                    >
+                                        <span className="h-[3px] w-[3px] rounded-full bg-white/15 group-hover/link:bg-violet-400 group-hover/link:shadow-[0_0_6px_rgba(139,92,246,0.6)] transition-all duration-200" />
+                                        Carrusel seccion 2
                                     </Link>
                                 </div>
                             </details>
@@ -235,6 +251,7 @@ export default function DashboardLayout({ children }) {
                                     </svg>
                                     Volver al sitio
                                 </Link>
+                                <SignOutBtn />
                             </div>
                         </div>
                     </nav>
@@ -267,5 +284,6 @@ export default function DashboardLayout({ children }) {
                 </div>
             </div>
         </div>
+        </ClerkProvider>
     );
 }

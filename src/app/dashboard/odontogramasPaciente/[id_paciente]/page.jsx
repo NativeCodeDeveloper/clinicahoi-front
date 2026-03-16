@@ -338,12 +338,18 @@ export default function OdontogramasPaciente() {
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                                     </svg>
                                                     <span className="text-xs text-slate-500">
-                                                        {new Date(item.fecha).toLocaleDateString("es-CL", {
-                                                            weekday: "long",
-                                                            year: "numeric",
-                                                            month: "long",
-                                                            day: "numeric",
-                                                        })}
+                                                        {(() => {
+                                                            const raw = typeof item.fecha === "string" ? item.fecha : "";
+                                                            const parts = raw.split("T")[0]?.split("-");
+                                                            if (!parts || parts.length !== 3) return raw;
+                                                            const local = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+                                                            return local.toLocaleDateString("es-CL", {
+                                                                weekday: "long",
+                                                                year: "numeric",
+                                                                month: "long",
+                                                                day: "numeric",
+                                                            });
+                                                        })()}
                                                     </span>
                                                 </div>
                                             </div>

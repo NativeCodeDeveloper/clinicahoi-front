@@ -37,6 +37,19 @@ export default function Paciente() {
         router.push(`/dashboard/EdicionFicha/${id_ficha}`);
     }
 
+    function agendarPaciente() {
+        const paciente = detallePaciente[0];
+        if (!paciente) return;
+        const params = new URLSearchParams({
+            nombre: paciente.nombre || "",
+            apellido: paciente.apellido || "",
+            rut: paciente.rut || "",
+            telefono: paciente.telefono || "",
+            email: paciente.correo || "",
+        });
+        router.push(`/dashboard/calendario?${params.toString()}`);
+    }
+
     const [nombre, setNombre] = useState("");
     const [apellido, setApellido] = useState("");
     const [rut, setRut] = useState("");
@@ -337,11 +350,15 @@ export default function Paciente() {
                             {listaFichas.length}
                         </span>
                     </div>
-                    <div className="flex items-center gap-2">
-
-
-
-
+                    <div className="flex items-center gap-2 flex-wrap">
+                        <button
+                            onClick={agendarPaciente}
+                            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-violet-600 to-purple-500 rounded-lg hover:from-violet-700 hover:to-purple-600 transition-all duration-150 shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            Agendar ahora
+                        </button>
 
                         <button
                             onClick={() => listarFichasClinicasPaciente(id_paciente)}

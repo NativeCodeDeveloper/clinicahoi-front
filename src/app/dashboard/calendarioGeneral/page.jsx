@@ -365,6 +365,7 @@ export default function Calendario() {
             start: convertirAFechaCalendario(cita.fechaInicio, cita.horaInicio),
             end: convertirAFechaCalendario(cita.fechaFinalizacion, cita.horaFinalizacion),
             tipo: "reserva",
+            resource: cita,
         }));
         const eventosBloqueos = (dataBloqueos || []).map((bloqueo) => ({
             id_bloqueo: bloqueo.id_bloqueo,
@@ -372,12 +373,20 @@ export default function Calendario() {
             start: convertirAFechaCalendario(bloqueo.fechaInicio, bloqueo.horaInicio),
             end: convertirAFechaCalendario(bloqueo.fechaFinalizacion, bloqueo.horaFinalizacion),
             tipo: "bloqueo",
+            resource: bloqueo,
         }));
         setEvents([...eventosReservas, ...eventosBloqueos]);
     }, [dataAgenda, dataBloqueos]);
 
     const eventStyleGetter = (event) => {
         const esBloqueo = event.tipo === "bloqueo";
+        const estadoReservaNormalizado = event.resource?.estadoReserva?.toLowerCase?.() ?? "";
+        const paletteReserva = estadoReservaNormalizado === "confirmada"
+            ? {backgroundColor: "#16a34a", color: "#ffffff"}
+            : estadoReservaNormalizado === "anulada"
+                ? {backgroundColor: "#9f1239", color: "#ffffff"}
+                : {backgroundColor: "#7c3aed", color: "#ffffff"};
+
         return {
             style: {
                 display: 'flex',
@@ -393,8 +402,8 @@ export default function Calendario() {
                 fontSize: '0.8rem',
                 boxSizing: 'border-box',
                 borderRadius: '4px',
-                backgroundColor: esBloqueo ? '#dc2626' : '#0284c7',
-                color: '#fff',
+                backgroundColor: esBloqueo ? '#dc2626' : paletteReserva.backgroundColor,
+                color: esBloqueo ? '#fff' : paletteReserva.color,
                 fontWeight: '500',
                 wordBreak: 'break-word',
             },
@@ -571,7 +580,7 @@ export default function Calendario() {
                                         </span>
                                     )}
                                 </div>
-                                <div className="flex items-center gap-4">
+                                <div className="flex flex-wrap items-center gap-4">
                                     <div className="w-64">
                                         <SelectDinamic
                                             value={id_profesional}
@@ -582,6 +591,22 @@ export default function Calendario() {
                                             }))}
                                             placeholder="Selecciona un profesional"
                                         />
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="inline-block h-3 w-3 rounded bg-violet-600"></span>
+                                        <span className="text-xs text-slate-500">Reservada</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="inline-block h-3 w-3 rounded bg-green-600"></span>
+                                        <span className="text-xs text-slate-500">Confirmada</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="inline-block h-3 w-3 rounded bg-rose-800"></span>
+                                        <span className="text-xs text-slate-500">Anulada</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="inline-block h-3 w-3 rounded bg-red-600"></span>
+                                        <span className="text-xs text-slate-500">Bloqueado</span>
                                     </div>
                                     <div className="text-xs text-slate-500">Vista: <span className="font-medium text-slate-700">{currentView}</span></div>
                                 </div>

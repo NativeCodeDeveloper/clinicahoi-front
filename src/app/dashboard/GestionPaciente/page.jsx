@@ -428,7 +428,7 @@ export default function GestionPaciente() {
                                         <TableHead className="text-left font-semibold text-white text-xs uppercase tracking-wider px-3 py-3">Apellido</TableHead>
                                         <TableHead className="text-left font-semibold text-white text-xs uppercase tracking-wider px-3 py-3">RUT</TableHead>
                                         <TableHead className="text-right font-semibold text-white text-xs uppercase tracking-wider px-3 py-3">Teléfono</TableHead>
-                                        <TableHead className="text-right font-semibold text-white text-xs uppercase tracking-wider px-3 py-3">Correo</TableHead>
+                                        <TableHead className="text-center font-semibold text-white text-xs uppercase tracking-wider px-3 py-3">Agendar</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -447,7 +447,25 @@ export default function GestionPaciente() {
                                             <TableCell className="text-slate-600 text-sm px-3 py-2.5">{paciente.apellido}</TableCell>
                                             <TableCell className="text-slate-600 text-sm px-3 py-2.5 font-mono">{paciente.rut}</TableCell>
                                             <TableCell className="text-right text-slate-600 text-sm px-3 py-2.5">{paciente.telefono}</TableCell>
-                                            <TableCell className="text-right text-slate-500 text-sm px-3 py-2.5">{paciente.correo}</TableCell>
+                                            <TableCell className="text-center px-3 py-2.5">
+                                                <button
+                                                    onClick={() => {
+                                                        const params = new URLSearchParams({
+                                                            nombre: paciente.nombre || "",
+                                                            apellido: paciente.apellido || "",
+                                                            rut: paciente.rut || "",
+                                                            telefono: paciente.telefono || "",
+                                                            email: paciente.correo || "",
+                                                        });
+                                                        router.push(`/dashboard/calendario?${params.toString()}`);
+                                                    }}
+                                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg hover:bg-emerald-100 transition-colors duration-150">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                                    </svg>
+                                                    Agendar paciente
+                                                </button>
+                                            </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>

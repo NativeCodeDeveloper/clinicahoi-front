@@ -18,8 +18,8 @@ export default function OrbBackground({ children, orbX = 0.60, orbY = 0.58 }) {
     resize();
     window.addEventListener('resize', resize);
 
-    const ROWS = 80;
-    const COLS = 80;
+    const ROWS = 92;
+    const COLS = 92;
     const particles = [];
 
     for (let i = 0; i < ROWS; i++) {
@@ -32,31 +32,31 @@ export default function OrbBackground({ children, orbX = 0.60, orbY = 0.58 }) {
       // ny va de -1 (bottom) a 1 (top)
       const norm = (ny + 1) / 2; // 0 (bottom) → 1 (top)
 
-      // Bottom: azul/violeta → Mid: púrpura/magenta → Top: rosa/hot pink
+      // Bottom: teal profundo → Mid: cyan brillante → Top: aqua electrico
       let r, g, b;
-      if (norm < 0.35) {
-        // Azul violeta → púrpura
-        const t2 = norm / 0.35;
-        r = Math.round(60 + t2 * 80);
-        g = Math.round(0 + t2 * 5);
-        b = Math.round(220 - t2 * 40);
-      } else if (norm < 0.65) {
-        // Púrpura → magenta
-        const t2 = (norm - 0.35) / 0.3;
-        r = Math.round(140 + t2 * 60);
-        g = Math.round(5 + t2 * 10);
-        b = Math.round(180 - t2 * 40);
+      if (norm < 0.38) {
+        const t2 = norm / 0.38;
+        r = Math.round(8 + t2 * 12);
+        g = Math.round(110 + t2 * 85);
+        b = Math.round(145 + t2 * 75);
+      } else if (norm < 0.72) {
+        const t2 = (norm - 0.38) / 0.34;
+        r = Math.round(20 + t2 * 28);
+        g = Math.round(195 + t2 * 35);
+        b = Math.round(220 + t2 * 25);
       } else {
-        // Magenta → hot pink
-        const t2 = (norm - 0.65) / 0.35;
-        r = Math.round(200 + t2 * 55);
-        g = Math.round(15 + t2 * 40);
-        b = Math.round(140 - t2 * 30);
+        const t2 = (norm - 0.72) / 0.28;
+        r = Math.round(48 + t2 * 24);
+        g = Math.round(230 + t2 * 18);
+        b = Math.round(245 + t2 * 10);
       }
 
-      // Variación sutil con tiempo para efecto vivo
-      const shimmer = Math.sin(nx * 3 + t * 0.8) * 10;
-      r = Math.min(255, Math.max(0, r + shimmer));
+      // Variación marcada para que el orbe respire sobre fondo blanco
+      const shimmer = Math.sin(nx * 4.5 + t * 1.2) * 14;
+      const pulse = Math.cos(ny * 5 - t * 0.9) * 10;
+      r = Math.min(255, Math.max(0, r + shimmer * 0.25));
+      g = Math.min(255, Math.max(0, g + shimmer + pulse * 0.4));
+      b = Math.min(255, Math.max(0, b + pulse));
 
       return `rgb(${Math.round(r)},${Math.round(g)},${Math.round(b)})`;
     };
@@ -66,12 +66,13 @@ export default function OrbBackground({ children, orbX = 0.60, orbY = 0.58 }) {
 
       const cx = canvas.width * orbX;
       const cy = canvas.height * orbY;
-      const radius = Math.min(canvas.width, canvas.height) * 0.44;
+      const radius = Math.min(canvas.width, canvas.height) * 0.48;
 
       // Glow ambiental detrás del orbe
-      const glowGrad = ctx.createRadialGradient(cx, cy, radius * 0.2, cx, cy, radius * 1.6);
-      glowGrad.addColorStop(0, 'rgba(180, 50, 180, 0.08)');
-      glowGrad.addColorStop(0.5, 'rgba(100, 20, 160, 0.04)');
+      const glowGrad = ctx.createRadialGradient(cx, cy, radius * 0.12, cx, cy, radius * 1.9);
+      glowGrad.addColorStop(0, 'rgba(34, 211, 238, 0.26)');
+      glowGrad.addColorStop(0.32, 'rgba(14, 165, 233, 0.18)');
+      glowGrad.addColorStop(0.62, 'rgba(6, 182, 212, 0.10)');
       glowGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = glowGrad;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -79,7 +80,7 @@ export default function OrbBackground({ children, orbX = 0.60, orbY = 0.58 }) {
       // Rotación lenta en Y + ligera inclinación en X
       const rotY = time * 0.12;
       const rotX = Math.sin(time * 0.08) * 0.3;
-      const breathe = 1 + Math.sin(time * 0.15) * 0.06;
+      const breathe = 1 + Math.sin(time * 0.15) * 0.08;
       const cosRY = Math.cos(rotY);
       const sinRY = Math.sin(rotY);
       const cosRX = Math.cos(rotX);
@@ -117,8 +118,8 @@ export default function OrbBackground({ children, orbX = 0.60, orbY = 0.58 }) {
 
         // Profundidad
         const depth = (z3d + 1) / 2;
-        const dotSize = (0.4 + depth * 1.0) * perspective;
-        const alpha = 0.3 + depth * 0.7;
+        const dotSize = (0.65 + depth * 1.35) * perspective;
+        const alpha = 0.42 + depth * 0.58;
 
         const color = getColor(ny, nx, time);
 
@@ -143,7 +144,7 @@ export default function OrbBackground({ children, orbX = 0.60, orbY = 0.58 }) {
   }, []);
 
   return (
-    <div style={{ position: 'relative', width: '100%', minHeight: '100vh', background: '#000' }}>
+    <div style={{ position: 'relative', width: '100%', minHeight: '100vh', background: '#fff' }}>
       <canvas
         ref={canvasRef}
         style={{
