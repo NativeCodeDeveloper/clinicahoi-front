@@ -37,8 +37,8 @@ export const metadata = {
     template: "%s | Salud HOI",
   },
   icons: {
-    icon: "/icon.png",
-    apple: "/apple-icon.png",
+    icon: "/logo42.png",
+    apple: "/apple-logo42.png",
   },
   description:
     "Sitio oficial de Salud HOI en Puerto Aysen. Agenda de profesionales, atencion integral y servicios de salud.",
