@@ -224,18 +224,27 @@ export default function DashboardLayout({ children }) {
                                         Recursos de Agenda
                                     </Link>
                                     <Link
-                                        href="/dashboard/serviciosAgendamiento"
+                                        href="/dashboard/ProfesionalAgendamiento"
                                         className="group/link flex items-center gap-2.5 rounded-md px-2 py-[6px] text-[12.5px] font-light text-white/50 hover:text-white/90 hover:bg-white/[0.05] transition-all duration-200"
                                     >
                                         <span className="h-[3px] w-[3px] rounded-full bg-white/15 group-hover/link:bg-violet-400 group-hover/link:shadow-[0_0_6px_rgba(139,92,246,0.6)] transition-all duration-200" />
-                                        Tipos de Atención
+                                        Profesionales
                                     </Link>
+
                                     <Link
-                                        href="/dashboard/tarifaServicio"
+                                        href="/dashboard/convenios"
                                         className="group/link flex items-center gap-2.5 rounded-md px-2 py-[6px] text-[12.5px] font-light text-white/50 hover:text-white/90 hover:bg-white/[0.05] transition-all duration-200"
                                     >
                                         <span className="h-[3px] w-[3px] rounded-full bg-white/15 group-hover/link:bg-violet-400 group-hover/link:shadow-[0_0_6px_rgba(139,92,246,0.6)] transition-all duration-200" />
-                                        Cobro por Consulta
+                                        Convenios
+                                    </Link>
+
+                                    <Link
+                                        href="/dashboard/mediosDePago"
+                                        className="group/link flex items-center gap-2.5 rounded-md px-2 py-[6px] text-[12.5px] font-light text-white/50 hover:text-white/90 hover:bg-white/[0.05] transition-all duration-200"
+                                    >
+                                        <span className="h-[3px] w-[3px] rounded-full bg-white/15 group-hover/link:bg-violet-400 group-hover/link:shadow-[0_0_6px_rgba(139,92,246,0.6)] transition-all duration-200" />
+                                        Medios de Pago
                                     </Link>
                                 </div>
                             </details>
