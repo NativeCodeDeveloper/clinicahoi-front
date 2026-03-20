@@ -25,6 +25,188 @@ export default function Convenios() {
     const API = process.env.NEXT_PUBLIC_API_URL;
 
 
+
+    //LISTAR TODOS LOS CONVENIOS
+    async function listarConvenios() {
+        try {
+            const res = await fetch(`${API}/convenios/seleccionarTodosConvenios`, {
+                method: "GET",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                },
+                mode: "cors"
+            })
+
+            if(!res.ok) return toast.error(`No ha sido posible cargar los convenios. Mala respuesta del servidor, Contacte al equipo de Soporte.`);
+
+            const respuestaData = await res.json();
+            if (Array.isArray(respuestaData) && respuestaData.length > 0) {
+                setListado(respuestaData);
+            }else{
+                setListado([]);
+            }
+        }catch{
+            return toast.error(`Problema en el servidor contacte a soporte`)
+        }
+    }
+
+    useEffect(() => {
+        listarConvenios();
+    }, [])
+
+
+    //SELECCIONAR CONVENIO ESPECIFICO
+    async function seleccionarConvenios(id_convenio) {
+        try {
+            if(!id_convenio) return toast.error(`Debe especificar el convenio para que este sea seleccionado`);
+
+            const res = await fetch(`${API}/convenios/seleccionarConvenio`, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                },
+                mode: "cors",
+                body: JSON.stringify({id_convenio})
+            })
+
+            if(!res.ok) return toast.error(`No se ha podido seleccionar el convenio especifico, mala respuesta del servidor`);
+
+            const respuestaBackendData = await res.json();
+            if (Array.isArray(respuestaBackendData) && respuestaBackendData.length > 0) {
+                setTituloConvenio(respuestaBackendData[0].titulo_convenio);
+                setDescripcionConvenio(respuestaBackendData[0].descripcion_convenio);
+                setIdConvenio(respuestaBackendData[0].id_convenio);
+                return toast.success(`Convenio seleccionado!`);
+            }
+        }catch{
+            return toast.error(`Problema en el servidor contacte a soporte`)
+        }
+    }
+
+
+
+    //ELIMINAR CONVENIO SELECCIONADO
+
+    async function eliminarConvenios(id_convenio) {
+        try {
+
+            if(!id_convenio) return toast.error(`Para eliminar un convenio debe seleccionar al menos un convenio`);
+            const res = await fetch(`${API}/convenios/eliminarConvenio`, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                },
+                mode: "cors",
+                body: JSON.stringify({id_convenio})
+            })
+
+            if(!res.ok) return toast.error(`No se ha podido eliminar el convenio, mala respuesta del servidor`);
+
+            const respuestaBackendJson = await res.json();
+            if (respuestaBackendJson.message === true) {
+                limpiar();
+              await  listarConvenios();
+                return toast.success(`Convenio Eliminado con exito!`);
+            }
+
+        }catch{
+            return toast.error(`Problema en el servidor contacte a soporte`)
+        }
+    }
+
+
+    // ACTUALIZAR CONVENIO SELECCIONADO
+    async function actualizarConvenios(
+        titulo_convenio,
+        descripcion_convenio,
+        id_convenio
+    ) {
+        try {
+            if(!titulo_convenio||!descripcion_convenio||!id_convenio){
+                return toast.error("Debe llenar todos los campos.")
+            }
+
+            const res = await fetch(`${API}/convenios/actualizarConvenio`, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                },
+                mode: "cors",
+                body: JSON.stringify({
+                    titulo_convenio,
+                    descripcion_convenio,
+                    id_convenio
+                })
+            })
+
+            if(!res.ok) return toast.error(`No se ha podido actualizar de manera correcta los datos del convenio, mala respuesta del servidor.`)
+
+            const respuestaBackendJson = await res.json();
+            if(respuestaBackendJson.message === true) {
+
+                limpiar();
+                await listarConvenios();
+                return toast.success(`Se han actualizado con exito los datos del convenio`);
+            }
+        }catch{
+            return toast.error(`Problema en el servidor contacte a soporte`)
+        }
+    }
+
+
+    function limpiar() {
+        setTituloConvenio("");
+        setDescripcionConvenio("");
+        setIdConvenio(null);
+    }
+
+
+
+
+
+
+
+    // INSERTAR NUEVO CONVENIO
+    async function insertarNuevo(
+        titulo_convenio,
+        descripcion_convenio,
+    ) {
+        try {
+            if(!titulo_convenio||!descripcion_convenio){
+                return toast.error("Debe llenar todos los campos.")
+            }
+
+            const res = await fetch(`${API}/convenios/insertarConvenio`, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                },
+                mode: "cors",
+                body: JSON.stringify({
+                    titulo_convenio,
+                    descripcion_convenio,
+                })
+            })
+
+            if(!res.ok) return toast.error(`No se ha podido insertar de manera correcta los datos del convenio, mala respuesta del servidor.`)
+
+            const respuestaBackendJson = await res.json();
+            if(respuestaBackendJson.message === true) {
+
+                limpiar();
+                await listarConvenios();
+                return toast.success(`Se ingresado con exito el nuevo convenio`);
+            }
+        }catch{
+            return toast.error(`Problema en el servidor contacte a soporte`)
+        }
+    }
+
     return (
         <div className="min-h-screen bg-white">
             <ToasterClient />
@@ -85,23 +267,35 @@ export default function Convenios() {
                         </div>
 
                         <div className="flex flex-col gap-3 border-t border-slate-100 pt-6 sm:flex-row">
-                            <ButtonDinamic>
+                            <ButtonDinamic
+                            onClick={() => insertarNuevo(
+                                titulo_convenio,
+                                descripcion_convenio,
+                            )}
+                            >
                                 Guardar Convenio
                             </ButtonDinamic>
 
                             <ButtonDinamic
+                                onClick={()=> actualizarConvenios(
+                                    titulo_convenio,
+                                    descripcion_convenio,
+                                    id_convenio
+                                )}
                                 className="bg-blue-700 hover:bg-blue-600"
                             >
                                 Actualizar Convenio
                             </ButtonDinamic>
 
                             <ButtonDinamic
+                                onClick={()=> eliminarConvenios(id_convenio)}
                                 className="bg-red-600 hover:bg-red-500"
                             >
                                 Eliminar Convenio
                             </ButtonDinamic>
 
                             <ButtonDinamic
+                                onClick={()=> limpiar()}
                                 className="bg-slate-500 hover:bg-slate-400 w-full sm:w-auto"
                             >
                                 Limpiar
@@ -142,6 +336,7 @@ export default function Convenios() {
                                             <TableCell className="text-sm text-slate-500 max-w-[350px] truncate">{item.descripcion_convenio || '—'}</TableCell>
                                             <TableCell className="text-center">
                                                 <button
+                                                    onClick={()=> seleccionarConvenios(item.id_convenio)}
                                                     className="inline-flex items-center justify-center rounded-md bg-slate-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-slate-700 transition-colors"
                                                 >
                                                     Seleccionar
