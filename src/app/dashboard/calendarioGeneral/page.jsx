@@ -42,42 +42,62 @@ export default function Calendario() {
         style.textContent = `
             /* Estilos para eventos en vista mes */
             .rbc-month-view .rbc-event {
-                min-height: 28px !important;
+                min-height: 38px !important;
                 height: auto !important;
-                padding: 6px 8px !important;
-                line-height: 1.3 !important;
+                padding: 4px 6px !important;
+                line-height: 1.2 !important;
                 white-space: normal !important;
                 overflow: visible !important;
                 word-break: break-word !important;
             }
-            
+
             /* Estilos para eventos en vista semana y día */
             .rbc-time-view .rbc-event {
-                min-height: 30px !important;
+                min-height: 50px !important;
                 height: auto !important;
-                padding: 6px 8px !important;
-                line-height: 1.3 !important;
+                padding: 3px 5px !important;
+                line-height: 1.15 !important;
                 white-space: normal !important;
                 overflow: visible !important;
                 word-break: break-word !important;
             }
-            
+
+            .rbc-time-view .rbc-event-label {
+                display: none !important;
+            }
+
+            .rbc-time-view .rbc-event-content {
+                height: auto !important;
+                max-height: none !important;
+            }
+
             /* Aumentar altura de las celdas del mes para que quepan los nombres */
             .rbc-month-view .rbc-day-slot {
-                min-height: 80px !important;
+                min-height: 100px !important;
             }
-            
+
+            .rbc-month-row {
+                min-height: 100px !important;
+            }
+
             /* Contenedor de eventos en mes */
             .rbc-row-segment {
                 z-index: 1 !important;
             }
-            
+
+            .rbc-show-more {
+                font-size: 11px !important;
+                color: #0369a1 !important;
+                font-weight: 600 !important;
+            }
+
             /* Texto del evento */
             .rbc-event-label,
             .rbc-event-content {
                 white-space: normal !important;
                 overflow: visible !important;
                 word-break: break-word !important;
+                font-size: 12px !important;
             }
         `;
         document.head.appendChild(style);
@@ -107,6 +127,7 @@ export default function Calendario() {
     const [dataAgenda, setDataAgenda] = useState([]);
     const [dataBloqueos, setDataBloqueos] = useState([]);
     const [listaProfesionales, setListaProfesionales] = useState([]);
+    const [listaAsignaciones, setListaAsignaciones] = useState([]);
     const [id_profesional, setId_profesional] = useState("");
 
     async function seleccionarTodosProfesionalesCalendario() {
@@ -134,8 +155,24 @@ export default function Calendario() {
         }
     }
 
+    async function cargarAsignaciones() {
+        try {
+            const res = await fetch(`${API}/profesionalAgendaAsignacion/seleccionarTodasProfesionalAgendaAsignacion`, {
+                method: "GET",
+                headers: {Accept: "application/json", "Content-Type": "application/json"},
+                mode: "cors"
+            });
+            if (!res.ok) return;
+            const data = await res.json();
+            setListaAsignaciones(Array.isArray(data) ? data : []);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         seleccionarTodosProfesionalesCalendario();
+        cargarAsignaciones();
     }, []);
 
 
@@ -160,6 +197,13 @@ export default function Calendario() {
     function convertirAFechaCalendario(fechaISO, hora) {
         const soloFecha = fechaISO.slice(0, 10);
         return new Date(`${soloFecha}T${hora}`);
+    }
+
+    function obtenerTituloAsignacion(profesionalAgendaAsignacionId) {
+        if (!profesionalAgendaAsignacionId) return "";
+        return listaAsignaciones.find(
+            (item) => item.profesionalAgendaAsignacion_id === profesionalAgendaAsignacionId
+        )?.titulo_profesionalAgendaAsignacion ?? "";
     }
 
     // Helper: comprueba si un rango [start, end) se solapa con alguna reserva en dataAgenda
@@ -359,14 +403,22 @@ export default function Calendario() {
 
 
     useEffect(() => {
-        const eventosReservas = (dataAgenda || []).map((cita) => ({
-            id_reserva: cita.id_reserva,
-            title: cita.nombrePaciente + " " + cita.apellidoPaciente,
-            start: convertirAFechaCalendario(cita.fechaInicio, cita.horaInicio),
-            end: convertirAFechaCalendario(cita.fechaFinalizacion, cita.horaFinalizacion),
-            tipo: "reserva",
-            resource: cita,
-        }));
+        const eventosReservas = (dataAgenda || []).map((cita) => {
+            const paciente = `${cita.nombrePaciente} ${cita.apellidoPaciente}`.trim();
+            const asignacion = cita.titulo_profesionalAgendaAsignacion || obtenerTituloAsignacion(cita.profesionalAgendaAsignacion_id);
+            const profesional = cita.nombreProfesional || "";
+            return {
+                id_reserva: cita.id_reserva,
+                title: [paciente, asignacion, profesional].filter(Boolean).join(" | "),
+                paciente,
+                start: convertirAFechaCalendario(cita.fechaInicio, cita.horaInicio),
+                end: convertirAFechaCalendario(cita.fechaFinalizacion, cita.horaFinalizacion),
+                tipo: "reserva",
+                subtitulo: asignacion,
+                nombreProfesional: profesional,
+                resource: cita,
+            };
+        });
         const eventosBloqueos = (dataBloqueos || []).map((bloqueo) => ({
             id_bloqueo: bloqueo.id_bloqueo,
             title: "BLOQUEADO" + (bloqueo.motivo ? " - " + bloqueo.motivo : ""),
@@ -376,7 +428,7 @@ export default function Calendario() {
             resource: bloqueo,
         }));
         setEvents([...eventosReservas, ...eventosBloqueos]);
-    }, [dataAgenda, dataBloqueos]);
+    }, [dataAgenda, dataBloqueos, listaAsignaciones]);
 
     const eventStyleGetter = (event) => {
         const esBloqueo = event.tipo === "bloqueo";
@@ -390,16 +442,16 @@ export default function Calendario() {
         return {
             style: {
                 display: 'flex',
-                alignItems: 'center',
+                alignItems: 'flex-start',
                 height: 'auto',
-                minHeight: '28px',
+                minHeight: '40px',
                 maxHeight: 'none',
                 whiteSpace: 'normal',
                 overflow: 'visible',
                 textOverflow: 'clip',
-                lineHeight: '1.3',
-                padding: '6px 8px',
-                fontSize: '0.8rem',
+                lineHeight: '1.15',
+                padding: '3px 5px',
+                fontSize: '11px',
                 boxSizing: 'border-box',
                 borderRadius: '4px',
                 backgroundColor: esBloqueo ? '#dc2626' : paletteReserva.backgroundColor,
@@ -410,27 +462,36 @@ export default function Calendario() {
         };
     };
 
-    const EventComponent = ({event}) => (
-        <div title={event.title} className="break-words text-[13px] leading-snug w-full flex items-center gap-1" style={{whiteSpace: 'normal', overflow: 'visible', wordBreak: 'break-word', hyphens: 'auto'}}>
-            {event.tipo === "bloqueo" && (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
+    const EventContent = ({event, compact = false}) => (
+        <div
+            title={[event.paciente, event.subtitulo, event.nombreProfesional].filter(Boolean).join(" - ")}
+            className={`break-words leading-snug w-full ${compact ? "text-[11px]" : "text-[11px]"} ${event.tipo === "bloqueo" ? "flex items-center gap-1" : ""}`}
+            style={{whiteSpace: 'normal', overflow: 'visible', wordBreak: 'break-word'}}
+        >
+            {event.tipo === "bloqueo" ? (
+                <>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <span>{event.title}</span>
+                </>
+            ) : (
+                <div className="w-full leading-tight">
+                    <div className="font-bold">{event.paciente || event.title}</div>
+                    {event.subtitulo && (
+                        <div className="font-medium opacity-95">{event.subtitulo}</div>
+                    )}
+                    {event.nombreProfesional && (
+                        <div className="opacity-85">{event.nombreProfesional}</div>
+                    )}
+                </div>
             )}
-            {event.title}
         </div>
     );
 
-    const TitleOnlyEvent = ({event}) => (
-        <div title={event.title} className="break-words text-[13px] leading-snug font-medium w-full flex items-center gap-1" style={{whiteSpace: 'normal', overflow: 'visible', wordBreak: 'break-word'}}>
-            {event.tipo === "bloqueo" && (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-            )}
-            {event.title}
-        </div>
-    );
+    const EventComponent = ({event}) => <EventContent event={event} />;
+
+    const TitleOnlyEvent = ({event}) => <EventContent event={event} compact />;
 
 
     async function actualizarInformacionReserva(nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva, id_reserva) {

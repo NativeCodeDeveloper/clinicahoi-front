@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 export function SelectDinamic({ className, value, onChange, onClick, placeholder, options = [] }) {
     return (
         <select
-            value={value}
+            value={value ?? ""}
             onChange={onChange}
             onClick={onClick}
             className={cn(

@@ -24,9 +24,9 @@ export default function ProfesionalAgendamiento() {
 const [profesionalAgendaAsignacion_id, setProfesionalAgendaAsignacionId] = useState(null);
 const [titulo_profesionalAgendaAsignacion, setTituloProfesionalAgendaAsignacion] = useState("");
 const [descripcion_profesionalAgendaAsignacion, setDescripcionProfesionalAgendaAsignacion] = useState("");
-const [porcentaje_remuneracion, setPorcentajeRemuneracion] = useState(null);
+const [porcentaje_remuneracion, setPorcentajeRemuneracion] = useState("");
 
-const [agenda_id, setAgendaId] = useState(null);
+const [agenda_id, setAgendaId] = useState("");
 
 const [listado, setListado] = useState([]);
 const [listadoAgendas, setListadoAgendas] = useState([]);
@@ -131,10 +131,10 @@ try {
 
 
     function limpiar() {
-        setAgendaId(null);
+        setAgendaId("");
         setTituloProfesionalAgendaAsignacion("");
         setDescripcionProfesionalAgendaAsignacion("");
-        setPorcentajeRemuneracion(null);
+        setPorcentajeRemuneracion("");
         setProfesionalAgendaAsignacionId(null);
     }
 

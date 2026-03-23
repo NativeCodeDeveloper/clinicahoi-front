@@ -60,7 +60,7 @@ export default function AgendaCitas() {
 
             if (respuestaBackend.length > 0) {
                 setdataLista(respuestaBackend);
-                return toast.success("Reservas con el profesional encontradas!")
+                return toast.success("Reservas encontradas para la agenda seleccionada!")
             }
 
 
@@ -223,8 +223,10 @@ export default function AgendaCitas() {
             });
 
             const respuestaBackend = await res.json();
-            if (respuestaBackend) {
+            if (Array.isArray(respuestaBackend)) {
                 setdataLista(respuestaBackend);
+            } else {
+                setdataLista([]);
             }
         } catch (err) {
             console.log(err);
@@ -353,7 +355,7 @@ export default function AgendaCitas() {
                                         </button>
                                     </div>
                                     <div className="mt-5">
-                                        <label className="block text-sm font-medium text-slate-700 mb-1.5">Profesional</label>
+                                        <label className="block text-sm font-medium text-slate-700 mb-1.5">Agenda</label>
                                         <SelectDinamic
                                             value={id_profesional}
                                             onChange={(e) => setId_profesional(e.target.value)}
@@ -443,8 +445,9 @@ export default function AgendaCitas() {
                                 <TableHeader>
                                     <TableRow className="bg-gradient-to-r from-sky-600 to-cyan-500 hover:from-sky-600 hover:to-cyan-500">
                                         <TableHead className="text-center font-semibold text-white text-xs uppercase tracking-wider px-3 py-3">Fecha</TableHead>
-                                        <TableHead className="text-center font-semibold text-white text-xs uppercase tracking-wider px-3 py-3">Paciente</TableHead>
+                                        <TableHead className="text-center font-semibold text-white text-xs uppercase tracking-wider px-3 py-3">Agenda</TableHead>
                                         <TableHead className="text-center font-semibold text-white text-xs uppercase tracking-wider px-3 py-3">Profesional</TableHead>
+                                        <TableHead className="text-center font-semibold text-white text-xs uppercase tracking-wider px-3 py-3">Paciente</TableHead>
                                         <TableHead className="text-center font-semibold text-white text-xs uppercase tracking-wider px-3 py-3">RUT</TableHead>
                                         <TableHead className="text-center font-semibold text-white text-xs uppercase tracking-wider px-3 py-3">Estado</TableHead>
                                         <TableHead className="text-center font-semibold text-white text-xs uppercase tracking-wider px-3 py-3">Detalle</TableHead>
@@ -464,11 +467,15 @@ export default function AgendaCitas() {
                                                 </span>
                                             </TableCell>
                                             <TableCell className="text-center font-medium text-slate-800 text-sm px-3 py-2.5 whitespace-nowrap">
-                                                {data.nombrePaciente + " " + data.apellidoPaciente}
-                                            </TableCell>
-                                            <TableCell className="text-center font-medium text-slate-800 text-sm px-3 py-2.5 whitespace-nowrap">
                                                 {data.nombreProfesional}
                                             </TableCell>
+                                            <TableCell className="text-center font-medium text-slate-800 text-sm px-3 py-2.5 whitespace-nowrap">
+                                                {data.titulo_profesionalAgendaAsignacion}
+                                            </TableCell>
+                                            <TableCell className="text-center font-medium text-slate-800 text-sm px-3 py-2.5 whitespace-nowrap">
+                                                {data.nombrePaciente + " " + data.apellidoPaciente}
+                                            </TableCell>
+
                                             <TableCell className="text-center text-slate-600 text-sm px-3 py-2.5 font-mono whitespace-nowrap">{data.rut}</TableCell>
                                             <TableCell className="text-center px-3 py-2.5">
                                                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${badgeEstado(data.estadoReserva)}`}>

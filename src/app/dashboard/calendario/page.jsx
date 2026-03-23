@@ -258,14 +258,12 @@ function CalendarioContent() {
         }
     }
 
-    async function cargarAsignacionesPorProfesional(profesional_id) {
+    async function cargarAsignaciones() {
         try {
-            if (!profesional_id) return;
-            const res = await fetch(`${API}/profesionalAgendaAsignacion/seleccionarProfesionalAgendaAsignacionPorProfesional`, {
-                method: 'POST',
+            const res = await fetch(`${API}/profesionalAgendaAsignacion/seleccionarTodasProfesionalAgendaAsignacion`, {
+                method: 'GET',
                 headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
                 mode: 'cors',
-                body: JSON.stringify({profesional_id})
             });
             if (!res.ok) return;
             const data = await res.json();
@@ -279,6 +277,7 @@ function CalendarioContent() {
         seleccionarTodosProfesionalesCalendario();
         cargarMediosDePago();
         cargarConvenios();
+        cargarAsignaciones();
     }, []);
 
 
@@ -353,6 +352,13 @@ function CalendarioContent() {
 
     function obtenerNombreProfesionalSeleccionado() {
         return listaProfesionales.find((p) => p.id_profesional === id_profesional)?.nombreProfesional ?? "Sin profesional";
+    }
+
+    function obtenerTituloAsignacion(profesionalAgendaAsignacionId) {
+        if (!profesionalAgendaAsignacionId) return "";
+        return listaAsignaciones.find(
+            (item) => item.profesionalAgendaAsignacion_id === profesionalAgendaAsignacionId
+        )?.titulo_profesionalAgendaAsignacion ?? "";
     }
 
     function limpiarSeleccionTemporal() {
@@ -507,10 +513,8 @@ function CalendarioContent() {
         if (id_profesional) {
             cargarDataPorProfesional(id_profesional);
             cargarBloqueosPorProfesional(id_profesional);
-            cargarAsignacionesPorProfesional(id_profesional);
         } else {
             cargarDataAgenda();
-            setListaAsignaciones([]);
         }
     }, [id_profesional]);
 
@@ -665,16 +669,17 @@ function CalendarioContent() {
     useEffect(() => {
         const eventosReservas = (dataAgenda || []).map((cita) => ({
             id_reserva: cita.id_reserva,
-            title: cita.nombrePaciente + " " + cita.apellidoPaciente,
+            title: `${cita.nombrePaciente} ${cita.apellidoPaciente}`.trim(),
             start: convertirAFechaCalendario(cita.fechaInicio, cita.horaInicio),
             end: convertirAFechaCalendario(cita.fechaFinalizacion, cita.horaFinalizacion),
             allDay: false,
             tipo: "reserva",
+            subtitulo: obtenerTituloAsignacion(cita.profesionalAgendaAsignacion_id),
             resource: cita,
         }));
         const eventosBloqueos = expandirBloqueosPorDia(dataBloqueos || []);
         setEvents([...eventosReservas, ...eventosBloqueos]);
-    }, [dataAgenda, dataBloqueos]);
+    }, [dataAgenda, dataBloqueos, listaAsignaciones]);
 
     const eventStyleGetter = (event) => {
         const esBloqueo = event.tipo === "bloqueo";
@@ -700,27 +705,35 @@ function CalendarioContent() {
         };
     };
 
-    const EventComponent = ({event}) => (
-        <div title={event.title} className="break-words text-[13px] leading-snug w-full flex items-center gap-1" style={{whiteSpace: 'normal', overflow: 'visible', wordBreak: 'break-word', hyphens: 'auto'}}>
-            {event.tipo === "bloqueo" && (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
+    const EventContent = ({event, compact = false}) => (
+        <div
+            title={event.subtitulo ? `${event.title} - ${event.subtitulo}` : event.title}
+            className={`break-words leading-snug w-full ${compact ? "text-[13px] font-medium" : "text-[13px]"} ${event.tipo === "bloqueo" ? "flex items-center gap-1" : ""}`}
+            style={{whiteSpace: 'normal', overflow: 'visible', wordBreak: 'break-word', hyphens: 'auto'}}
+        >
+            {event.tipo === "bloqueo" ? (
+                <>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <span>{event.title}</span>
+                </>
+            ) : (
+                <div className="w-full">
+                    <div className="font-semibold">{event.title}</div>
+                    {event.subtitulo && (
+                        <div className="mt-0.5 text-[11px] font-medium opacity-90">
+                            Asignación: {event.subtitulo}
+                        </div>
+                    )}
+                </div>
             )}
-            {event.title}
         </div>
     );
 
-    const TitleOnlyEvent = ({event}) => (
-        <div title={event.title} className="break-words text-[13px] leading-snug font-medium w-full flex items-center gap-1" style={{whiteSpace: 'normal', overflow: 'visible', wordBreak: 'break-word'}}>
-            {event.tipo === "bloqueo" && (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-            )}
-            {event.title}
-        </div>
-    );
+    const EventComponent = ({event}) => <EventContent event={event} />;
+
+    const TitleOnlyEvent = ({event}) => <EventContent event={event} compact />;
 
     async function actualizarInformacionReserva(nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva, id_profesional, id_reserva, cobro_reserva, mediosDePago_id, id_convenio, profesionalAgendaAsignacion_id) {
         try {
