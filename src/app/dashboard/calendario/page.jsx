@@ -18,6 +18,7 @@ import {toast} from "react-hot-toast";
 import es from "date-fns/locale/es";
 import {InfoButton} from "@/Componentes/InfoButton";
 import {SelectDinamic} from "@/Componentes/SelectDinamic";
+import {InputNumberDinamic} from "@/Componentes/InputNumberDinamic";
 
 const locales = {es: es};
 const dfStartOfWeek = (date) => startOfWeek(date, {locale: es});
@@ -175,6 +176,13 @@ function CalendarioContent() {
     const [dataBloqueos, setDataBloqueos] = useState([]);
     const [listaProfesionales, setListaProfesionales] = useState([]);
     const [id_profesional, setId_profesional] = useState("");
+    const [cobro_reserva, setCobro_reserva] = useState("");
+    const [mediosDePago_id, setMediosDePago_id] = useState("");
+    const [id_convenio, setId_convenio] = useState("");
+    const [profesionalAgendaAsignacion_id, setProfesionalAgendaAsignacion_id] = useState("");
+    const [listaMediosDePago, setListaMediosDePago] = useState([]);
+    const [listaConvenios, setListaConvenios] = useState([]);
+    const [listaAsignaciones, setListaAsignaciones] = useState([]);
     const [selectionPreview, setSelectionPreview] = useState(null);
     const [selectionDraft, setSelectionDraft] = useState(null);
     const [floatingDraft, setFloatingDraft] = useState(null);
@@ -186,6 +194,10 @@ function CalendarioContent() {
         rut: "",
         telefono: "",
         email: "",
+        cobro_reserva: "",
+        mediosDePago_id: "",
+        id_convenio: "",
+        profesionalAgendaAsignacion_id: "",
     });
 
     async function seleccionarTodosProfesionalesCalendario() {
@@ -216,8 +228,57 @@ function CalendarioContent() {
         }
     }
 
+    async function cargarMediosDePago() {
+        try {
+            const res = await fetch(`${API}/mediosDePago/seleccionarTodosMediosDePago`, {
+                method: 'GET',
+                headers: {Accept: 'application/json'},
+                mode: 'cors'
+            });
+            if (!res.ok) return toast.error('Error al cargar los medios de pago.');
+            const data = await res.json();
+            if (Array.isArray(data)) setListaMediosDePago(data);
+        } catch (error) {
+            return toast.error('Error al cargar los medios de pago.');
+        }
+    }
+
+    async function cargarConvenios() {
+        try {
+            const res = await fetch(`${API}/convenios/seleccionarTodosConvenios`, {
+                method: 'GET',
+                headers: {Accept: 'application/json'},
+                mode: 'cors'
+            });
+            if (!res.ok) return toast.error('Error al cargar los convenios.');
+            const data = await res.json();
+            if (Array.isArray(data)) setListaConvenios(data);
+        } catch (error) {
+            return toast.error('Error al cargar los convenios.');
+        }
+    }
+
+    async function cargarAsignacionesPorProfesional(profesional_id) {
+        try {
+            if (!profesional_id) return;
+            const res = await fetch(`${API}/profesionalAgendaAsignacion/seleccionarProfesionalAgendaAsignacionPorProfesional`, {
+                method: 'POST',
+                headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
+                mode: 'cors',
+                body: JSON.stringify({profesional_id})
+            });
+            if (!res.ok) return;
+            const data = await res.json();
+            setListaAsignaciones(Array.isArray(data) ? data : []);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         seleccionarTodosProfesionalesCalendario();
+        cargarMediosDePago();
+        cargarConvenios();
     }, []);
 
 
@@ -304,6 +365,10 @@ function CalendarioContent() {
             rut: "",
             telefono: "",
             email: "",
+            cobro_reserva: "",
+            mediosDePago_id: "",
+            id_convenio: "",
+            profesionalAgendaAsignacion_id: "",
         });
     }
 
@@ -329,6 +394,10 @@ function CalendarioContent() {
             rut,
             telefono,
             email,
+            cobro_reserva,
+            mediosDePago_id,
+            id_convenio,
+            profesionalAgendaAsignacion_id,
         });
         setFloatingDraft({
             id: "draft-selection",
@@ -438,8 +507,10 @@ function CalendarioContent() {
         if (id_profesional) {
             cargarDataPorProfesional(id_profesional);
             cargarBloqueosPorProfesional(id_profesional);
+            cargarAsignacionesPorProfesional(id_profesional);
         } else {
             cargarDataAgenda();
+            setListaAsignaciones([]);
         }
     }, [id_profesional]);
 
@@ -470,9 +541,9 @@ function CalendarioContent() {
     }, [draggingPopup]);
     
 
-    async function insertarNuevaReserva(nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion,id_profesional) {
+    async function insertarNuevaReserva(nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, id_profesional, cobro_reserva, mediosDePago_id, id_convenio, profesionalAgendaAsignacion_id) {
         try {
-            if (!nombrePaciente || !apellidoPaciente || !rut || !telefono || !email || !fechaInicio || !horaInicio || !horaFinalizacion || !id_profesional) {
+            if (!nombrePaciente || !apellidoPaciente || !rut || !telefono || !email || !fechaInicio || !horaInicio || !fechaFinalizacion || !horaFinalizacion || !id_profesional) {
                 toast.error('Debe llenar todos los campos');
                 return false;
             }
@@ -497,7 +568,7 @@ function CalendarioContent() {
                     method: "POST",
                     headers: {Accept: "application/json", "Content-Type": "application/json"},
                     mode: "cors",
-                    body: JSON.stringify({nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva: "reservada" ,id_profesional})
+                    body: JSON.stringify({nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva: "reservada", id_profesional, cobro_reserva, mediosDePago_id, id_convenio, profesionalAgendaAsignacion_id})
                 });
                 const respuestaBackend = await res.json();
                 if (respuestaBackend.message === true) {
@@ -505,7 +576,7 @@ function CalendarioContent() {
                     await refrescarCalendario();
                     toast.success("Se ha ingresado correctamente el agendamiento");
                     return true;
-                } else if (respuestaBackend.message === "conflicto" || respuestaBackend.message.includes("conflicto")) {
+                } else if (respuestaBackend.message === "conflicto" || (typeof respuestaBackend.message === "string" && respuestaBackend.message.includes("conflicto"))) {
                     toast.error("No puede agendar una hora que ya esta ocupada");
                     return false;
                 } else if (respuestaBackend.message === false) {
@@ -540,7 +611,11 @@ function CalendarioContent() {
             end.toTimeString().slice(0, 8),
             reservaOriginal.estadoReserva,
             reservaOriginal.id_profesional,
-            reservaOriginal.id_reserva
+            reservaOriginal.id_reserva,
+            reservaOriginal.cobro_reserva,
+            reservaOriginal.mediosDePago_id,
+            reservaOriginal.id_convenio,
+            reservaOriginal.profesionalAgendaAsignacion_id
         );
     }
 
@@ -647,7 +722,7 @@ function CalendarioContent() {
         </div>
     );
 
-    async function actualizarInformacionReserva(nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva, id_profesional, id_reserva) {
+    async function actualizarInformacionReserva(nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva, id_profesional, id_reserva, cobro_reserva, mediosDePago_id, id_convenio, profesionalAgendaAsignacion_id) {
         try {
             if (!nombrePaciente || !apellidoPaciente || !rut || !telefono || !email || !fechaInicio || !horaInicio || !fechaFinalizacion || !horaFinalizacion || !estadoReserva || !id_profesional || !id_reserva) {
                 return toast.error("Debe llenar todos los campos para poder actualizar la reserva");
@@ -656,7 +731,7 @@ function CalendarioContent() {
                 method: "POST",
                 headers: {Accept: "application/json", "Content-Type": "application/json"},
                 mode: "cors",
-                body: JSON.stringify({nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva, id_profesional, id_reserva})
+                body: JSON.stringify({nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva, id_profesional, id_reserva, cobro_reserva, mediosDePago_id, id_convenio, profesionalAgendaAsignacion_id})
             });
             if (!res.ok) return toast.error("El servidor no responde");
             const respuestaBackend = await res.json();
@@ -696,6 +771,10 @@ function CalendarioContent() {
             setHoraFinalizacion(reserva.horaFinalizacion ?? "");
             setEstadoReserva(reserva.estadoReserva ?? "");
             setId_profesional(reserva.id_profesional ?? "");
+            setCobro_reserva(reserva.cobro_reserva ?? "");
+            setMediosDePago_id(reserva.mediosDePago_id ?? "");
+            setId_convenio(reserva.id_convenio ?? "");
+            setProfesionalAgendaAsignacion_id(reserva.profesionalAgendaAsignacion_id ?? "");
         } catch (error) {
             console.log(error);
             return toast.error("El servidor no responde");
@@ -708,6 +787,7 @@ function CalendarioContent() {
 
     function limpiarData() {
         setNombrePaciente(""); setApellidoPaciente(""); setTelefono(""); setRut(""); setEmail("");
+        setCobro_reserva(""); setMediosDePago_id(""); setId_convenio(""); setProfesionalAgendaAsignacion_id("");
     }
 
     function iniciarDragPopup(event) {
@@ -734,7 +814,11 @@ function CalendarioContent() {
             selectionDraft.start.toTimeString().slice(0, 8),
             formatearFechaLocal(selectionDraft.end),
             selectionDraft.end.toTimeString().slice(0, 8),
-            id_profesional
+            id_profesional,
+            popupForm.cobro_reserva,
+            popupForm.mediosDePago_id,
+            popupForm.id_convenio,
+            popupForm.profesionalAgendaAsignacion_id
         );
         if (created) {
             setNombrePaciente(popupForm.nombrePaciente);
@@ -773,7 +857,7 @@ function CalendarioContent() {
                 if (respuestaBackend.message === true) {
                     return toast.success("Se ha eliminado con exito la reserva");
                 } else if (respuestaBackend.message === false) {
-                    return toast.success("No se ha podido eliminar la reserva. Intente mas tarde.");
+                    return toast.error("No se ha podido eliminar la reserva. Intente mas tarde.");
                 } else {
                     return toast.error("No hay conexion con el servidor por favor contacte a Soporte");
                 }
@@ -857,6 +941,53 @@ function CalendarioContent() {
                                     />
                                 </div>
                             </div>
+                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                <div>
+                                    <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-500">Cobro Reserva</label>
+                                    <InputNumberDinamic
+                                        value={cobro_reserva}
+                                        onChange={(e) => setCobro_reserva(e.target.value)}
+                                        placeholder="Ej: 25000"
+                                        className="w-full"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-500">Medio de Pago</label>
+                                    <SelectDinamic
+                                        value={mediosDePago_id}
+                                        onChange={(e) => setMediosDePago_id(Number(e.target.value))}
+                                        options={listaMediosDePago.map(item => ({
+                                            value: item.mediosDePago_id,
+                                            label: item.titulo_mediosDePago
+                                        }))}
+                                        placeholder="Selecciona medio de pago"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-500">Convenio</label>
+                                    <SelectDinamic
+                                        value={id_convenio}
+                                        onChange={(e) => setId_convenio(Number(e.target.value))}
+                                        options={listaConvenios.map(item => ({
+                                            value: item.id_convenio,
+                                            label: item.titulo_convenio
+                                        }))}
+                                        placeholder="Selecciona un convenio"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-500">Asignación Profesional</label>
+                                    <SelectDinamic
+                                        value={profesionalAgendaAsignacion_id}
+                                        onChange={(e) => setProfesionalAgendaAsignacion_id(Number(e.target.value))}
+                                        options={listaAsignaciones.map(item => ({
+                                            value: item.profesionalAgendaAsignacion_id,
+                                            label: item.titulo_profesionalAgendaAsignacion
+                                        }))}
+                                        placeholder="Selecciona asignación"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -911,7 +1042,7 @@ function CalendarioContent() {
                         {/* Botones de acción */}
                         <div className="flex flex-wrap gap-2 pt-0.5">
                             <button
-                                onClick={() => insertarNuevaReserva(nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, id_profesional)}
+                                onClick={() => insertarNuevaReserva(nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, id_profesional, cobro_reserva, mediosDePago_id, id_convenio, profesionalAgendaAsignacion_id)}
                                 className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-sky-600 to-cyan-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:from-sky-700 hover:to-cyan-600">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"/>
@@ -920,7 +1051,7 @@ function CalendarioContent() {
                             </button>
 
                             <button
-                                onClick={() => actualizarInformacionReserva(nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva, id_profesional, id_reserva)}
+                                onClick={() => actualizarInformacionReserva(nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva, id_profesional, id_reserva, cobro_reserva, mediosDePago_id, id_convenio, profesionalAgendaAsignacion_id)}
                                 className="inline-flex items-center gap-1.5 rounded-xl border border-sky-200 bg-sky-50 px-3.5 py-2.5 text-sm font-medium text-sky-700 transition-colors duration-150 hover:bg-sky-100">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
@@ -1174,6 +1305,56 @@ function CalendarioContent() {
                                             className="h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-[12px] text-slate-800 outline-none transition-all focus:border-violet-300 focus:ring-4 focus:ring-violet-100"
                                             placeholder="correo@dominio.com"
                                         />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-[11px] text-slate-500">Cobro</label>
+                                        <input
+                                            type="text"
+                                            inputMode="decimal"
+                                            value={popupForm.cobro_reserva}
+                                            onChange={(e) => { const val = e.target.value; if (val === "" || /^\d*\.?\d*$/.test(val)) setPopupForm((prev) => ({...prev, cobro_reserva: val})); }}
+                                            className="h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-[12px] text-slate-800 outline-none transition-all focus:border-violet-300 focus:ring-4 focus:ring-violet-100"
+                                            placeholder="25000"
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-[11px] text-slate-500">Medio de Pago</label>
+                                        <select
+                                            value={popupForm.mediosDePago_id}
+                                            onChange={(e) => setPopupForm((prev) => ({...prev, mediosDePago_id: Number(e.target.value)}))}
+                                            className="h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-[12px] text-slate-800 outline-none transition-all focus:border-violet-300 focus:ring-4 focus:ring-violet-100"
+                                        >
+                                            <option value="">Seleccionar</option>
+                                            {listaMediosDePago.map(item => (
+                                                <option key={item.mediosDePago_id} value={item.mediosDePago_id}>{item.titulo_mediosDePago}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-[11px] text-slate-500">Convenio</label>
+                                        <select
+                                            value={popupForm.id_convenio}
+                                            onChange={(e) => setPopupForm((prev) => ({...prev, id_convenio: Number(e.target.value)}))}
+                                            className="h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-[12px] text-slate-800 outline-none transition-all focus:border-violet-300 focus:ring-4 focus:ring-violet-100"
+                                        >
+                                            <option value="">Seleccionar</option>
+                                            {listaConvenios.map(item => (
+                                                <option key={item.id_convenio} value={item.id_convenio}>{item.titulo_convenio}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-[11px] text-slate-500">Asignación</label>
+                                        <select
+                                            value={popupForm.profesionalAgendaAsignacion_id}
+                                            onChange={(e) => setPopupForm((prev) => ({...prev, profesionalAgendaAsignacion_id: Number(e.target.value)}))}
+                                            className="h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-[12px] text-slate-800 outline-none transition-all focus:border-violet-300 focus:ring-4 focus:ring-violet-100"
+                                        >
+                                            <option value="">Seleccionar</option>
+                                            {listaAsignaciones.map(item => (
+                                                <option key={item.profesionalAgendaAsignacion_id} value={item.profesionalAgendaAsignacion_id}>{item.titulo_profesionalAgendaAsignacion}</option>
+                                            ))}
+                                        </select>
                                     </div>
                                 </div>
                             </div>
