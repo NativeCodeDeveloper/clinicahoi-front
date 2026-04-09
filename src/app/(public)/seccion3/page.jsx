@@ -29,26 +29,42 @@ async function getConveniosLogos() {
     const publicaciones = await res.json();
     if (!Array.isArray(publicaciones) || publicaciones.length === 0) return { title: "", items: [] };
 
-    // Carrusel 1 del dashboard: usa la publicación reservada id 10 con hasta 3 imágenes.
+    // Prioridad 1: carrusel 1 histórico (id 10) con hasta 3 imágenes.
     const carruselConvenios = publicaciones.find((item) => Number(item?.id_publicaciones) === 10);
-    if (!carruselConvenios) return { title: "", items: [] };
+    if (carruselConvenios) {
+      const carouselTitle = carruselConvenios.descripcionPublicaciones?.trim() || "";
+      const itemsFromId10 = [
+        carruselConvenios.imagenPublicaciones_primera,
+        carruselConvenios.imagenPublicaciones_segunda,
+        carruselConvenios.imagenPublicaciones_tercera,
+      ]
+        .filter((imageId) => Boolean(imageId))
+        .map((imageId, index) => ({
+          src: cfToSrc(imageId, CLOUDFLARE_HASH, "full"),
+          title: convenios[index] || `Convenio ${index + 1}`,
+          alt: `Logo ${convenios[index] || `convenio ${index + 1}`}`,
+        }))
+        .filter((item) => item.src);
 
-    const carouselTitle = carruselConvenios.descripcionPublicaciones?.trim() || "";
+      if (itemsFromId10.length > 0) {
+        return { title: carouselTitle, items: itemsFromId10 };
+      }
+    }
 
-    const items = [
-      carruselConvenios.imagenPublicaciones_primera,
-      carruselConvenios.imagenPublicaciones_segunda,
-      carruselConvenios.imagenPublicaciones_tercera,
-    ]
-      .filter((imageId) => Boolean(imageId))
-      .map((imageId, index) => ({
-        src: cfToSrc(imageId, CLOUDFLARE_HASH, "full"),
-        title: convenios[index] || `Convenio ${index + 1}`,
-        alt: `Logo ${convenios[index] || `convenio ${index + 1}`}`,
+    // Fallback: usar publicaciones activas con imagen para no dejar carrusel vacío.
+    const fallbackItems = publicaciones
+      .map((item, index) => ({
+        src: cfToSrc(item?.imagenPublicaciones_primera, CLOUDFLARE_HASH, "full"),
+        title: item?.descripcionPublicaciones?.trim() || `Convenio ${index + 1}`,
+        alt: item?.descripcionPublicaciones?.trim() || `Logo convenio ${index + 1}`,
       }))
-      .filter((item) => item.src);
+      .filter((item) => item.src)
+      .slice(0, 8);
 
-    return { title: carouselTitle, items };
+    return {
+      title: fallbackItems.length ? "Convenios y alianzas" : "",
+      items: fallbackItems,
+    };
   } catch (err) {
     console.error("Error al cargar logos de convenios (carrusel 1):", err);
     return { title: "", items: [] };
