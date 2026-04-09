@@ -1,10 +1,63 @@
 import Link from "next/link";
 import { BadgeCheck, Building2, FileText, Users } from "lucide-react";
 import RevealOnScroll from "@/Componentes/RevealOnScroll";
+import ConveniosLogosCarousel from "@/Componentes/ConveniosLogosCarousel";
 
 const convenios = ["ANFUP", "FENPRUSS", "FENATS", "Club deportivo Lord Cochrane"];
 
-export default function Seccion3() {
+function cfToSrc(imageId, hash, variant = "full") {
+  if (!imageId) return "";
+  if (typeof imageId === "string" && imageId.startsWith("http")) return imageId;
+  return `https://imagedelivery.net/${hash}/${imageId}/${variant}`;
+}
+
+async function getConveniosLogos() {
+  const API = process.env.NEXT_PUBLIC_API_URL;
+  const CLOUDFLARE_HASH = process.env.NEXT_PUBLIC_CLOUDFLARE_HASH || "aCBUhLfqUcxA2yhIBn1fNQ";
+
+  if (!API) return { title: "", items: [] };
+
+  try {
+    const res = await fetch(`${API}/publicaciones/seleccionarPublicaciones`, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+      next: { revalidate: 60 },
+    });
+
+    if (!res.ok) return { title: "", items: [] };
+
+    const publicaciones = await res.json();
+    if (!Array.isArray(publicaciones) || publicaciones.length === 0) return { title: "", items: [] };
+
+    // Carrusel 1 del dashboard: usa la publicación reservada id 10 con hasta 3 imágenes.
+    const carruselConvenios = publicaciones.find((item) => Number(item?.id_publicaciones) === 10);
+    if (!carruselConvenios) return { title: "", items: [] };
+
+    const carouselTitle = carruselConvenios.descripcionPublicaciones?.trim() || "";
+
+    const items = [
+      carruselConvenios.imagenPublicaciones_primera,
+      carruselConvenios.imagenPublicaciones_segunda,
+      carruselConvenios.imagenPublicaciones_tercera,
+    ]
+      .filter((imageId) => Boolean(imageId))
+      .map((imageId, index) => ({
+        src: cfToSrc(imageId, CLOUDFLARE_HASH, "full"),
+        title: convenios[index] || `Convenio ${index + 1}`,
+        alt: `Logo ${convenios[index] || `convenio ${index + 1}`}`,
+      }))
+      .filter((item) => item.src);
+
+    return { title: carouselTitle, items };
+  } catch (err) {
+    console.error("Error al cargar logos de convenios (carrusel 1):", err);
+    return { title: "", items: [] };
+  }
+}
+
+export default async function Seccion3() {
+  const conveniosCarrusel = await getConveniosLogos();
+
   return (
     <section
       id="convenios"
@@ -36,6 +89,18 @@ export default function Seccion3() {
                   </li>
                 ))}
               </ul>
+
+              <div className="mt-8">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#5e82c7]">
+                  Logos de convenios
+                </p>
+                {conveniosCarrusel.title ? (
+                  <h3 className="mt-2 text-base font-semibold text-[#1f3f76] sm:text-lg">
+                    {conveniosCarrusel.title}
+                  </h3>
+                ) : null}
+                <ConveniosLogosCarousel items={conveniosCarrusel.items} />
+              </div>
             </article>
           </RevealOnScroll>
 
