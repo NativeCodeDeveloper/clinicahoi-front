@@ -3,8 +3,6 @@ import { BadgeCheck, Building2, FileText, Users } from "lucide-react";
 import RevealOnScroll from "@/Componentes/RevealOnScroll";
 import ConveniosLogosCarousel from "@/Componentes/ConveniosLogosCarousel";
 
-const convenios = ["ANFUP", "FENPRUSS", "FENATS", "Club deportivo Lord Cochrane"];
-
 function cfToSrc(imageId, hash, variant = "full") {
   if (!imageId) return "";
   if (typeof imageId === "string" && imageId.startsWith("http")) return imageId;
@@ -35,8 +33,7 @@ async function getConveniosLogos() {
         title: item?.publicacionesTitulo?.trim() || `Convenio ${index + 1}`,
         alt: item?.publicacionesTitulo?.trim() || `Logo convenio ${index + 1}`,
       }))
-      .filter((item) => item.src)
-      .slice(0, 8);
+      .filter((item) => item.src);
 
     return {
       title: items.length ? "Convenios y alianzas" : "",
@@ -57,48 +54,32 @@ export default async function Seccion3() {
       className="scroll-mt-24 bg-[linear-gradient(180deg,rgba(220,233,253,0.88)_0%,rgba(176,199,233,0.84)_100%)] py-20 text-slate-900 sm:py-24"
     >
       <div className="mx-auto w-full max-w-7xl px-5 md:px-8 lg:px-10">
-        <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="space-y-6">
           <RevealOnScroll>
-            <article className="h-full rounded-3xl border border-[#c9daf8] bg-white p-7 shadow-[0_20px_45px_-32px_rgba(45,78,145,0.85)] sm:p-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#5e82c7]">Convenios</p>
-              <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[#1f3f76] sm:text-4xl">
+            <article className="rounded-3xl border border-[#c9daf8] bg-white p-7 shadow-[0_20px_45px_-32px_rgba(45,78,145,0.85)] sm:p-8">
+              <p className="text-xs text-center font-semibold uppercase tracking-[0.24em] text-[#5e82c7]">Convenios</p>
+              <h2 className="mt-4 text-center text-3xl font-semibold tracking-tight text-[#1f3f76] sm:text-4xl">
                 Convenios activos Salud HOI
               </h2>
-              <p className="mt-4 text-sm leading-7 text-slate-700 sm:text-base">
+              <p className="mt-4 text-center text-sm leading-7 text-slate-700 sm:text-base">
                 Beneficios disponibles para instituciones y agrupaciones con atencion en
                 Puerto Aysen.
               </p>
 
-              <ul className="mt-8 grid gap-3">
-                {convenios.map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-center gap-3 rounded-2xl border border-[#d2e0fb] bg-[#f6f9ff] px-4 py-3"
-                  >
-                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#e5efff] text-[#477fe0]">
-                      <Building2 className="h-5 w-5" />
-                    </span>
-                    <span className="text-sm font-semibold text-slate-800 sm:text-base">{item}</span>
-                  </li>
-                ))}
-              </ul>
-
               <div className="mt-8">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#5e82c7]">
-                  Logos de convenios
-                </p>
+                
                 {conveniosCarrusel.title ? (
                   <h3 className="mt-2 text-base font-semibold text-[#1f3f76] sm:text-lg">
                     {conveniosCarrusel.title}
                   </h3>
                 ) : null}
-                <ConveniosLogosCarousel items={conveniosCarrusel.items} />
+                <ConveniosLogosCarousel items={conveniosCarrusel.items} variant="large" />
               </div>
             </article>
           </RevealOnScroll>
 
           <RevealOnScroll>
-            <article className="h-full rounded-3xl border border-[#c9daf8] bg-gradient-to-br from-[#dce9ff] via-[#edf3ff] to-[#f8fbff] p-7 sm:p-8">
+            <article className="rounded-3xl border border-[#c9daf8] bg-gradient-to-br from-[#dce9ff] via-[#edf3ff] to-[#f8fbff] p-7 sm:p-8">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#5e82c7]">¿Tienes convenio?</p>
               <h3 className="mt-4 text-2xl font-semibold tracking-tight text-[#1f3f76] sm:text-3xl">
                 Accede a tus beneficios

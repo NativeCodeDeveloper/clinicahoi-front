@@ -92,9 +92,9 @@ export default function InformacionesHoyCarousel({ cards = [] }) {
                   className="h-[230px] w-full object-contain sm:h-[250px]"
                 />
               </div>
-              <h3 className="mt-6 text-balance text-[2.1rem] font-black leading-[1.15] tracking-tight text-[#262323] sm:text-[2.55rem]">
+              <p className="mt-5 text-pretty text-sm font-medium leading-6 text-slate-700 sm:text-base sm:leading-7">
                 {item.title}
-              </h3>
+              </p>
             </article>
           </RevealOnScroll>
         ))}
