@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { getRoleCapabilities, normalizeRole } from "@/lib/permissions";
 
 const links = [
   { label: "Inicio", href: "/dashboard" },
@@ -24,6 +26,20 @@ const sections = [
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
+  const { sessionClaims } = useAuth();
+  const role = normalizeRole(
+    sessionClaims?.metadata?.role ||
+    sessionClaims?.publicMetadata?.role ||
+    sessionClaims?.role
+  );
+  const capabilities = getRoleCapabilities(role);
+
+  const visibleSections = sections.filter((section) => {
+    if (section.title === "Agenda Clínica") return capabilities.canAccessAgenda;
+    if (section.title === "Registros Clínicos") return capabilities.canAccessFicha;
+    if (section.title === "Administración Web") return capabilities.canAccessAdmin;
+    return true;
+  });
 
   return (
     <div className="md:hidden sticky top-0 z-40">
@@ -57,7 +73,7 @@ export default function MobileNav() {
           {/* Menu panel */}
           <div className="absolute left-0 right-0 z-50 mx-3 mt-1 max-h-[70vh] overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-xl">
             <nav className="p-3 space-y-3">
-              {sections.map((section) => (
+              {visibleSections.map((section) => (
                 <div key={section.title}>
                   <div className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-400">
                     {section.title}

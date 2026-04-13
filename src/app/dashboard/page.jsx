@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import OrbBackground from "@/components/OrbBackground";
 import { Michroma } from "next/font/google";
@@ -22,6 +23,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
+import { getRoleCapabilities, normalizeRole } from "@/lib/permissions";
 
 const michroma = Michroma({ weight: "400", subsets: ["latin"], display: "swap" });
 
@@ -117,6 +119,13 @@ function MiniCalendar() {
 export default function DashboardHome() {
     const API = process.env.NEXT_PUBLIC_API_URL;
     const [dataLista, setdataLista] = useState([]);
+    const { sessionClaims } = useAuth();
+    const role = normalizeRole(
+        sessionClaims?.metadata?.role ||
+        sessionClaims?.publicMetadata?.role ||
+        sessionClaims?.role
+    );
+    const capabilities = getRoleCapabilities(role);
 
     async function buscarCitasHoy() {
         try {
@@ -173,6 +182,15 @@ export default function DashboardHome() {
         { label: "Anuladas", value: citasAnuladas, icon: ClipboardList, color: "from-indigo-400 to-indigo-600", glow: "indigo", pct: totalCitas > 0 ? Math.round((citasAnuladas / totalCitas) * 100) : 0 },
         { label: "Reservadas", value: citasReservadas, icon: Users, color: "from-indigo-500 to-cyan-500", glow: "indigo", pct: totalCitas > 0 ? Math.round((citasReservadas / totalCitas) * 100) : 0 },
     ];
+
+    const accionesVisibles = acciones.filter((accion) => {
+        if (accion.href === "/dashboard/GestionPaciente") return capabilities.canAccessFicha;
+        if (accion.href === "/dashboard/FichaClinica") return capabilities.canAccessFicha;
+        if (accion.href === "/dashboard/calendario" || accion.href === "/dashboard/calendarioGeneral") {
+            return capabilities.canAccessAgenda;
+        }
+        return true;
+    });
 
     return (
         <OrbBackground>
@@ -385,7 +403,7 @@ export default function DashboardHome() {
                                 <h2 className="text-[14px] font-semibold text-slate-900">Acciones rapidas</h2>
                             </div>
                             <div className="grid grid-cols-2 gap-2.5">
-                                {acciones.map((acc) => {
+                                {accionesVisibles.map((acc) => {
                                     const Icon = acc.icon;
                                     return (
                                         <Link

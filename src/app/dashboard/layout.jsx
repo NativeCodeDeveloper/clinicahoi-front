@@ -1,15 +1,21 @@
 // app/dashboard/layout.jsx
 import { ClerkProvider } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import MobileNav from "./MobileNav";
 import SignOutBtn from "./SignOutBtn";
+import { getRoleCapabilities, getRoleFromSessionClaims } from "@/lib/permissions";
 
 export const metadata = {
     title: "Dashboard",
     description: "Panel de administración",
 };
 
-export default function DashboardLayout({ children }) {
+export default async function DashboardLayout({ children }) {
+    const { sessionClaims } = await auth();
+    const role = getRoleFromSessionClaims(sessionClaims);
+    const capabilities = getRoleCapabilities(role);
+
     return (
         <ClerkProvider>
         <div className="h-screen w-full overflow-hidden bg-white">
@@ -54,6 +60,7 @@ export default function DashboardLayout({ children }) {
                             </details>
 
                             {/* — Agenda Clínica — */}
+                            {capabilities.canAccessAgenda && (
                             <details className="group">
                                 <summary className="flex items-center justify-between px-2 py-1 text-[11px] font-medium text-white/30 hover:text-white/45 transition-colors duration-200 cursor-pointer list-none select-none tracking-normal">
                                     <span>Agenda clinica</span>
@@ -94,8 +101,10 @@ export default function DashboardLayout({ children }) {
                                     </Link>
                                 </div>
                             </details>
+                            )}
 
                             {/* — Registros Clínicos — */}
+                            {capabilities.canAccessFicha && (
                             <details className="group">
                                 <summary className="flex items-center justify-between px-2 py-1 text-[11px] font-medium text-white/30 hover:text-white/45 transition-colors duration-200 cursor-pointer list-none select-none tracking-normal">
                                     <span>Registros clinicos</span>
@@ -120,6 +129,7 @@ export default function DashboardLayout({ children }) {
                                     </Link>
                                 </div>
                             </details>
+                            )}
 
 
 
@@ -169,6 +179,7 @@ export default function DashboardLayout({ children }) {
 
 
                             {/* — Administración Web — */}
+                            {capabilities.canAccessAdmin && (
                             <details className="group">
                                 <summary className="flex items-center justify-between px-2 py-1 text-[11px] font-medium text-white/30 hover:text-white/45 transition-colors duration-200 cursor-pointer list-none select-none tracking-normal">
                                     <span>Administracion web</span>
@@ -198,16 +209,22 @@ export default function DashboardLayout({ children }) {
 
 
                                     <Link
-                                        href="/dashboard/publicaciones"
+                                        href="/dashboard/reportes"
                                         className="group/link flex items-center gap-2.5 rounded-md px-2 py-[6px] text-[12.5px] font-light text-white/50 hover:text-white/90 hover:bg-white/[0.05] transition-all duration-200"
                                     >
                                         <span className="h-[3px] w-[3px] rounded-full bg-white/15 group-hover/link:bg-violet-400 group-hover/link:shadow-[0_0_6px_rgba(139,92,246,0.6)] transition-all duration-200" />
-                                        Carrusel seccion 2
+                                        Reporte
                                     </Link>
                                 </div>
+
+
+
+
                             </details>
+                            )}
 
                             {/* — Cobro por Consulta — */}
+                            {capabilities.canAccessAdmin && (
                             <details className="group">
                                 <summary className="flex items-center justify-between px-2 py-1 text-[11px] font-medium text-white/30 hover:text-white/45 transition-colors duration-200 cursor-pointer list-none select-none tracking-normal">
                                     <span>Cobro por consulta</span>
@@ -248,6 +265,7 @@ export default function DashboardLayout({ children }) {
                                     </Link>
                                 </div>
                             </details>
+                            )}
 
                         </div>
 
