@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { getRoleCapabilities, normalizeRole } from "@/lib/permissions";
@@ -24,15 +23,9 @@ const sections = [
   { title: "Administración Web", items: [links[6], links[7]] },
 ];
 
-export default function MobileNav() {
+export default function MobileNav({ role }) {
   const [open, setOpen] = useState(false);
-  const { sessionClaims } = useAuth();
-  const role = normalizeRole(
-    sessionClaims?.metadata?.role ||
-    sessionClaims?.publicMetadata?.role ||
-    sessionClaims?.role
-  );
-  const capabilities = getRoleCapabilities(role);
+  const capabilities = getRoleCapabilities(normalizeRole(role));
 
   const visibleSections = sections.filter((section) => {
     if (section.title === "Agenda Clínica") return capabilities.canAccessAgenda;

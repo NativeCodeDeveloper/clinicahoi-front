@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import OrbBackground from "@/components/OrbBackground";
 import { Michroma } from "next/font/google";
@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
-import { getRoleCapabilities, normalizeRole } from "@/lib/permissions";
+import { getRoleCapabilities, getRoleFromUser } from "@/lib/permissions";
 
 const michroma = Michroma({ weight: "400", subsets: ["latin"], display: "swap" });
 
@@ -119,12 +119,8 @@ function MiniCalendar() {
 export default function DashboardHome() {
     const API = process.env.NEXT_PUBLIC_API_URL;
     const [dataLista, setdataLista] = useState([]);
-    const { sessionClaims } = useAuth();
-    const role = normalizeRole(
-        sessionClaims?.metadata?.role ||
-        sessionClaims?.publicMetadata?.role ||
-        sessionClaims?.role
-    );
+    const { user } = useUser();
+    const role = getRoleFromUser(user);
     const capabilities = getRoleCapabilities(role);
 
     async function buscarCitasHoy() {

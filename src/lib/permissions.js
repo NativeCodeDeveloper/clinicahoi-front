@@ -38,8 +38,19 @@ export function normalizeRole(role) {
 export function getRoleFromSessionClaims(sessionClaims) {
   const role =
     sessionClaims?.metadata?.role ||
+    sessionClaims?.public_metadata?.role ||
     sessionClaims?.publicMetadata?.role ||
     sessionClaims?.role;
+
+  return normalizeRole(role);
+}
+
+export function getRoleFromUser(user) {
+  const role =
+    user?.publicMetadata?.role ||
+    user?.public_metadata?.role ||
+    user?.unsafeMetadata?.role ||
+    user?.unsafe_metadata?.role;
 
   return normalizeRole(role);
 }

@@ -1,10 +1,10 @@
 // app/dashboard/layout.jsx
 import { ClerkProvider } from "@clerk/nextjs";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import Link from "next/link";
 import MobileNav from "./MobileNav";
 import SignOutBtn from "./SignOutBtn";
-import { getRoleCapabilities, getRoleFromSessionClaims } from "@/lib/permissions";
+import { getRoleCapabilities, getRoleFromSessionClaims, getRoleFromUser } from "@/lib/permissions";
 
 export const metadata = {
     title: "Dashboard",
@@ -12,8 +12,15 @@ export const metadata = {
 };
 
 export default async function DashboardLayout({ children }) {
-    const { sessionClaims } = await auth();
-    const role = getRoleFromSessionClaims(sessionClaims);
+    const { userId, sessionClaims } = await auth();
+    let role = getRoleFromSessionClaims(sessionClaims);
+
+    if (role === "none" && userId) {
+        const client = await clerkClient();
+        const user = await client.users.getUser(userId);
+        role = getRoleFromUser(user);
+    }
+
     const capabilities = getRoleCapabilities(role);
 
     return (
@@ -309,7 +316,7 @@ export default async function DashboardLayout({ children }) {
 
                 {/* Content */}
                 <div className="flex-1 min-w-0 h-full overflow-y-auto">
-                    <MobileNav />
+                    <MobileNav role={role} />
 
                     <main className="min-w-0">
                         {children}

@@ -1,8 +1,8 @@
 //NUEVOS ACCESOS
 
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkClient, clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { getRoleFromSessionClaims, hasRouteAccess } from "@/lib/permissions";
+import { getRoleFromSessionClaims, getRoleFromUser, hasRouteAccess } from "@/lib/permissions";
 
 const isDashboard = createRouteMatcher(["/dashboard(.*)"]);
 
@@ -15,7 +15,13 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.redirect(new URL("/sign-in", req.url));
   }
 
-  const role = getRoleFromSessionClaims(sessionClaims);
+  let role = getRoleFromSessionClaims(sessionClaims);
+
+  if (role === "none") {
+    const client = await clerkClient();
+    const user = await client.users.getUser(userId);
+    role = getRoleFromUser(user);
+  }
 
   if (!hasRouteAccess(role, req.nextUrl.pathname)) {
     return NextResponse.redirect(new URL("/dashboard/no-access", req.url));
