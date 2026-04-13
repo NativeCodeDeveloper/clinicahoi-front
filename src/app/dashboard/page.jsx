@@ -180,7 +180,7 @@ export default function DashboardHome() {
     ];
 
     const accionesVisibles = acciones.filter((accion) => {
-        if (accion.href === "/dashboard/GestionPaciente") return capabilities.canAccessFicha;
+        if (accion.href === "/dashboard/GestionPaciente") return capabilities.canAccessGestionPaciente;
         if (accion.href === "/dashboard/FichaClinica") return capabilities.canAccessFicha;
         if (accion.href === "/dashboard/calendario" || accion.href === "/dashboard/calendarioGeneral") {
             return capabilities.canAccessAgenda;

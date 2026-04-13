@@ -27,7 +27,7 @@ export const ROLE_ROUTE_PREFIXES = {
   [USER_ROLES.NONE]: ["/dashboard/no-access"],
   [USER_ROLES.ADMIN]: ["/dashboard"],
   [USER_ROLES.AGENDA_FICHA]: ["/dashboard", "/dashboard/no-access", ...AGENDA_PATTERNS, ...FICHA_PATTERNS],
-  [USER_ROLES.SOLO_CALENDARIO]: ["/dashboard", "/dashboard/no-access", ...AGENDA_PATTERNS],
+  [USER_ROLES.SOLO_CALENDARIO]: ["/dashboard", "/dashboard/no-access", ...AGENDA_PATTERNS, "/dashboard/GestionPaciente"],
 };
 
 export function normalizeRole(role) {
@@ -68,6 +68,10 @@ export function getRoleCapabilities(role) {
     role: normalizedRole,
     canAccessAgenda: normalizedRole === USER_ROLES.ADMIN || normalizedRole === USER_ROLES.AGENDA_FICHA || normalizedRole === USER_ROLES.SOLO_CALENDARIO,
     canAccessFicha: normalizedRole === USER_ROLES.ADMIN || normalizedRole === USER_ROLES.AGENDA_FICHA,
+    canAccessGestionPaciente:
+      normalizedRole === USER_ROLES.ADMIN ||
+      normalizedRole === USER_ROLES.AGENDA_FICHA ||
+      normalizedRole === USER_ROLES.SOLO_CALENDARIO,
     canAccessAdmin: normalizedRole === USER_ROLES.ADMIN,
   };
 }

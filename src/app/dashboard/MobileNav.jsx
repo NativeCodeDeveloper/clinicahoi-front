@@ -29,10 +29,17 @@ export default function MobileNav({ role }) {
 
   const visibleSections = sections.filter((section) => {
     if (section.title === "Agenda Clínica") return capabilities.canAccessAgenda;
-    if (section.title === "Registros Clínicos") return capabilities.canAccessFicha;
+    if (section.title === "Registros Clínicos") return capabilities.canAccessFicha || capabilities.canAccessGestionPaciente;
     if (section.title === "Administración Web") return capabilities.canAccessAdmin;
     return true;
   });
+
+  const getVisibleItems = (section) =>
+    section.items.filter((item) => {
+      if (item.href === "/dashboard/GestionPaciente") return capabilities.canAccessGestionPaciente;
+      if (item.href === "/dashboard/FichaClinica") return capabilities.canAccessFicha;
+      return true;
+    });
 
   return (
     <div className="md:hidden sticky top-0 z-40">
@@ -66,26 +73,31 @@ export default function MobileNav({ role }) {
           {/* Menu panel */}
           <div className="absolute left-0 right-0 z-50 mx-3 mt-1 max-h-[70vh] overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-xl">
             <nav className="p-3 space-y-3">
-              {visibleSections.map((section) => (
-                <div key={section.title}>
-                  <div className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-400">
-                    {section.title}
+              {visibleSections.map((section) => {
+                const visibleItems = getVisibleItems(section);
+                if (visibleItems.length === 0) return null;
+
+                return (
+                  <div key={section.title}>
+                    <div className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-400">
+                      {section.title}
+                    </div>
+                    <div className="space-y-0.5">
+                      {visibleItems.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setOpen(false)}
+                          className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all"
+                        >
+                          <span className="h-1.5 w-1.5 rounded-full bg-slate-300" />
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
-                  <div className="space-y-0.5">
-                    {section.items.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setOpen(false)}
-                        className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all"
-                      >
-                        <span className="h-1.5 w-1.5 rounded-full bg-slate-300" />
-                        {item.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
 
               {/* Volver al sitio */}
               <div className="border-t border-slate-100 pt-2">
