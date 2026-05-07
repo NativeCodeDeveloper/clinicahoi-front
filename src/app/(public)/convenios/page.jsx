@@ -26,6 +26,12 @@ const conveniosActivos = [
     description:
       "Acceso a prestaciones orientadas a salud y rendimiento fisico para integrantes del club.",
   },
+  {
+    id: "Florecer",
+    name: "Centro Médico Florecer en Salud",
+    description:
+      "Acceso a prestaciones orientadas a un espacio de Salud, Bienestar y Belleza más cerca de ti",
+  },
 ];
 
 const opciones = [
