@@ -42,7 +42,7 @@ export default async function DashboardLayout({ children }) {
                                 className="relative h-32 w-full object-contain object-center drop-shadow-[0_0_12px_rgba(139,92,246,0.15)]"
                             />
                         </div>
-                        <div className={`${michroma.className} -mt-1 text-center`}>
+                        <div className="font-[family-name:var(--font-michroma)] -mt-1 text-center">
                             <p className="text-[11.5px] leading-tight text-white/90 tracking-[0.08em]">AgendaClinica</p>
                         </div>
                         <div className="mt-3 h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent" />
